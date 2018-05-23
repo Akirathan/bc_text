@@ -20,20 +20,21 @@ změny.
 
 \subsection{Použité technologie}
 
-\subsubsection[Backend]
+\subsubsection{Backend}
 % Backend framework a proč ho používat?
 Přestože očekáváme, že koečná webová aplikace bude poměrně malá a to jak požadovanou funkcionalitou, tak svým
 vzhledem, použitím některého z webových backend frameworků nám může velice usnadnit práci, například v těchto
 aspektech:
 \begin{itemize}
-    \item[Zabudovaná podpora uživatelů] nám jen stačí přidat uživatelům odkazy na jejich
+    \item Zabudovaná podpora uživatelů - nám jen stačí přidat uživatelům odkazy na jejich
         zařízení.
-    \item[Template system] nám umožňuje v HTML stránkách používat speciální
+    \item Template system nám umožňuje v HTML stránkách používat speciální
         tagy, díky kterým můžeme například do HTML stránky vložit hodnotu proměnné, nebo ... (TODO)
         Template system nakonec vygeneruje validní HTML stránku.
-    \item[Zabudovaná podpora databázových systémů] většina backend frameworků poskytuje vrstvu abstrakce nad
+    \item Zabudovaná podpora databázových systémů - většina backend frameworků poskytuje vrstvu abstrakce nad
         databázovýmy(?) systémy. V praxi to znamená, že nikde v kódu nemusíme přímo vytvářet SQL dotazy,
         stačí používat funkční API pro databáze v programovacím jazyce, ve kterém je daný framework napsaný.
+\end{itemize}
 
 % Různé frameworky a jaký je mezi nimi rozdíl
 Existuje mnoho různých backend frameworků.
@@ -46,7 +47,7 @@ tím jaký programovací jazyk používají.
 Vzhledem k tomu, že pro naši aplikaci je pro výběr konkretního frameworku relevantní pouze to jaký programovací
 jazyk používá, a vzhledem k tomu, že autor má předchozí zkušenosti s Pythonem, vybereme Django.
 
-\subsubsection[Frontend]
+\subsubsection{Frontend}
 % Bootstrap
 Vytváření vzhledu webu si usnadníme použitím knihovny Bootstrap.
 Ta nám umožňuje snadno vytvořit moderně vypadající responsive webovou aplikaci. % TODO: co znamená responsive?
@@ -54,21 +55,4 @@ Ta nám umožňuje snadno vytvořit moderně vypadající responsive webovou apl
 % Device stránka bude interaktivní, protože na ní budou všechny zařízení
 ...
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%  Komunikace server <--> STM %%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Komunikace STM s web serverem}
-
-% Volba HTTP vs custom protocol
-Pro komunikaci mezi webovým serverem a STM (tedy koncovým zařízením) můžeme vybrat buď HTTP nebo vlastní protokol.
-Implementace a otestování vlastního protokolu je pracné, využijeme tedy existujícího HTTP.
-Navíc nám v takovém případě stačí implementovat pouze na straně STM.
-
-% UID
-Každé STM zařízení má v sobě uložený 96-bitový unikátní identifikátor.
-
-% Connection fáze
-Nejprve je potřeba vyřešit registrace resp. připojení STM k serveru.
-Můžeme poslat (nezašifrovaný) požadavek typu:
-GET /connect/<dev_id>
-...
+\input{comm/general.tex}
