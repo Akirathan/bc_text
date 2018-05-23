@@ -1,0 +1,85 @@
+\chapter{Architektura}
+
+\section{Hardware}
+
+\subsection{RTC}
+% Obecný popis RTC
+RTC (real-time clock) je nezávislý časovač.
+Od ostatních časovačů se odlišuje tím, že se na něm dá snadno nastavit perioda
+s délkou jedné sekundy a že je schopen provozu i pokud je napájen pouze z
+baterie.
+
+Jako zdroj hodinového signálu může mít HSE, LSE nebo LSI oscilátory.
+V našem případě je nejvhodnější zvolit jako zdroj hodinového signálu LSI oscilátor,
+protože díky němu můžeme snadno nastavit RTC tak, aby svůj čítač zvyšovalo
+každou sekundu.
+
+RTC má 32-bitový čítač, do kterého můžeme zapsat libovolný čas a později z
+něj číst aktuální čas.
+Zapisovat do čítače lze de-facto kdykoli, v našem případě do čítače zapíšeme
+pouze jednou při inicializaci systému, dále z něj pouze čteme.
+
+RTC má programovatelný 20 bitový prescaler? a při jeho vhodném nastavení bude
+RTC zvyšovat čítač každou sekundu.
+
+% Second interrupt
+RTC dále lze nastavit tak, aby při každém zvýšení čítače generovalo hardwarové
+přerušení (second interrupt).
+V naší aplikaci je sekundové přerušení žádoucí.
+
+% Alarm, probuzení ze stand-by režimu
+Další důležitá vlastnost RTC je, že je schopné probudit desku ze stand-by režimu
+RTC je tedy schopné provozu i pokud je napájené pouze z baterie, respektive
+zvyšuje pouze čítač a porovnává s přednastavenou hodnotou alarmu, a pokud je
+čítač vyšší nebo stejný, probudí desku.
+Což znamená, že bychom mohli desku pravidelně přepínat do režimu stand-by, ve
+kterém je spotřeba energie minimální.
+Náš systém ale očekává stálé napájení, zejména kvůli ethernetové periferii,
+tuto vlastnost RTC tedy nevyužíváme.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SOFTWARE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Software}
+
+\subsection{Tasky}
+% Definice tasku
+V následujícím textu budeme označovat task jako sémanticky samostatné výpočetní
+vlákno.
+V podstatě je to totéž jako task v kontextu FreeRTOS.
+V STM3210C-EVAL je paralelismus pouze virtuální, protože zabudovaný procesor je
+jednojádrový.
+
+% Tasky v naší aplikaci
+Naše aplikace potřebuje provádět 3 tasky:
+\begin{itemize}
+    \item[GUI task] má na starosti periodicky iterovat přes všechny GUI elementy
+        na displeji a v případě potřeby je překreslit.
+
+    \item[User input task] má na starosti zjišťovat jestli uživatel zadal nějaký
+        vstup, ať už je to zmáčknutí joysticku, nebo jiného tlačítka, nebo dotek
+        na obrazovku.
+
+        Uživatelský vstup lze zpracovávat i pomocí interrupt handlerů - joystick
+        ale i jiné tlačítka lze nastavit tak, aby při stlačení vyvolali interrupt.
+        Pro naši situaci to ale není výhodné, protože bychom museli mít více různých
+        interrupt handlerů pro každý možný vstup.
+        Lepší je nastavit periodický task tak, aby iteroval všechny možné vstupy. 
+
+    \item[Ethernet task] má na startosti zpracovávání paketů z ethernetové
+        periferie. Je potřeba periodicky volat funkci z \textit{LwIP} knihovny [LwIP doc].
+        Zpracovávat ethernetové pakety z interrupt handleru není doporučeno [LwIP doc].
+
+    \item[RTC task] má na starosti zpracovávání sekundového interruptu a jednou za
+        minutu změřit aktuální teplotu. RTC task nemá s RTOS taskem nic společného, je
+        to totiž interrupt handler.
+\end{itemize}
+
+% RTOS vs timery
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SERVER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Server}
+

@@ -1,0 +1,37 @@
+\chapter*{Úvod}
+\addcontentsline{toc}{chapter}{Úvod}
+
+<Popis IoT>
+TODO
+
+<Popis embedded systémů>
+Embedded systémy jsou v dnešní době velice rozšířené.
+
+Firmware je sice přeložen pro STM3210C-Eval desku, nicméně s minimální změnou by
+se dalo použít i jiné zařízení od STM.
+
+Výhoda použití STM3210C-Eval spočívá zejména v tom, že kromě knihoven pro ovládání
+všech periferií poskytuje výrobce také BSP (board support package) obsahující
+knihovny pro ovládání všech komponent obsažených na desce jako je například LCD
+displej.
+Kdybychom použili pouze procesor od STM a zbytek desky si navrhli sami, pravděpodobně
+bychom ušetřili v oblasti hardware, ale museli bychom naprogramovat vlastní BSP.
+
+\section{Cíle práce}
+Cílem práce je vytvořit firmware pro embedded zařízení chovající se jako termostat
+a software pro server umožňující správu tohoto zařízení na dálku.
+
+STM3210C-EVAL je vývojová deska od výrobce STM. Má na sobě [mikro]procesor STM32F107VC,
+který patří do rodiny [mikro]procesorů STM32F1.
+
+Zařízení je osazeno mnoha periferiemi, ze kterých pro naše účely využijeme Ethernet,
+dotykový LCD displej, EEPROM, RTC a GPIO.
+
+LCD displej je k procesoru napojen pomocí SPI (Serial peripheral interface).
+Pro naše účely nebudeme využívat dotykovou obrazovku na displeji, a to kvůli nepřesnosti a
+zvýšení složitosti softwarového řešení.
+Zařízení stačí ovládat pomocí joysticku umístěného rovnou pod displejem.
+
+Pomocí GPIO (general purpose input/output) pinů jsou k desce připojeny teplotní sensor
+Dallas(?) DS18B20+ a relé modul.
+Na každém GPIO pinu lze nastavit směr vysílání, frekvenci (25 MHz, 50 MHz) a ???
