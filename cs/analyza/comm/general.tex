@@ -1,0 +1,111 @@
+\section{Komunikace STM a web serveru}
+
+% Jakou funkcionalitu bude náš systém potřebovat?
+Náš komunikační systém bude potřebovat následující funkcionalitu:
+\begin{itemize}
+    \item Periodicky posílat aktuálně naměřenou teplotu z STM na server.
+    \item Synchronizovat čas mezi serverem a STM
+    \item Synchronizovat nastavení intervalů na STM a na serveru.
+          Pro tento bod potřebujeme mít funkční synchronizaci času.
+\end{itemize}
+
+% definice actual a config
+Dále budeme výše zmíněné měřitelné hodnoty, které STM měří a periodicky je posílá
+serveru, nazývat [actual] a hodnoty, které se dají nastavit jak na serveru, tak na
+STM [config] hodnoty.
+% předpoklad přidávání nových actual a config položek
+Při návrhu komunikace předpokládáme, že budeme chtít přidávat další config a actual
+položky, takže v následujícím textu jsou intervaly zaměnitelné s jakoukoli
+config položkou, totéž platí pro naměřenou teplotu a actual položky.
+
+% STM a dynamická IP adresa
+Předpokládáme, že webový server běží na statické, veřejné IP adrese.
+Pokud STM připojíme ethernetovým kabelem do internetové sítě, bude mu přidělena dynamická IP adresa.
+Nemá smysl aby uživatel, kromě toho že koupí STM, pořizoval i statickou IP adresu.
+Vzhledem k tomu, že IP adresa STM je dynamická, server ji nemůže dopředu znát.
+Což znamená, že iniciátor komunikace musí být STM.
+
+% Volba HTTP vs custom protocol
+Pro komunikaci mezi webovým serverem a STM (tedy koncovým zařízením) můžeme vybrat buď HTTP nebo vlastní protokol.
+Implementace a otestování vlastního protokolu by bylo příliš pracné, využijeme tedy existujícího HTTP.
+Navíc nám v takovém případě stačí implementovat pouze na straně STM.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                              SYNCHRONIZACE                                               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Synchronizace config položek
+Config data může uživatel nastavit jak na serveru, tak přímo na STM.
+Proto je potřeba zavést synchronizaci.
+
+\subsection{Synchronizace}
+
+% nastavovat se můžu naráz na serveru i na STM
+Uživateli dovolíme nastavovat config data naráz na serveru i na STM, platit bude ale pouze
+nastavení, které bylo uloženo později (myšleno vzhledem k reálnému času).
+Jiná, uživatelsky pravděpodobně příjemnější, možnost by byla nedovolit uživateli současně
+nastavovat stejná config data na serveru i na STM.
+Tato možnost je ovšem zbytečně složitá na implementaci.
+
+% Synchronizace času - možnosti a proč je potřeba?
+Pro synchronizaci config dat je potřeba, aby server i STM měli nastavený společný čas.
+Vzhledem k tomu, že implementace NTP (Network time protocol) ale i jednoduššího a podobného
+protokolu SNTP (Simple Network Time Protocol) je na STM pracná, zvolíme jiný, jednodušší způsob synchronizace
+času mezi STM a serverem, který bude vycházet z Time Protocolu (TP - TODO odkaz na RFC).
+
+\subsubsection{Synchronizace času}
+% vyjdeme z TP a upravíme ho pro naše potřeby
+V rámci synchronizace času postačí sekundové rozlišení.
+Vyjdeme z TP, který má sekundové rozlišení, a ještě ho zjednodušíme pro naše účely.
+Podobně jako je tomu u TP, budeme ze serveru posílat počet sekund, které
+uběhly od nějakého pevně stanoveného data.
+Na rozdíl od TP to ale ještě zjednodušíme tak, že tento počet sekund bude posílat server
+v rámci první HTTP odpovědi.
+Další rozdíl od TP bute ten, že naše počáteční datum nebude 1.1.1900, ale 1.1.2000.
+% definice timestamp
+\textbf{Timestampem} budeme dále uvažovat číslo reprezentující počet sekund od 1.1.2000 00:00,
+které se vejde do 4-bytové proměnné bez znamenénka.
+
+% uživatel musí nastavit čas při zapnutí
+Při zapnutí STM musí uživatel nastavit čas. (TODO: viz ...)
+Nemá možnost nastavit datum - to je implicitně nastaveno na 1.1.2000 (dále označováno jako \texttt{REF\_DATE})
+Je to nutné kvůli tomu, aby STM vědělo který interval je zrovna nastavený.
+Uživatel může nastavit libovolný čas, který se nijak neshoduje s realitou, jde jen o to,
+aby STM vědělo, jakou teplotu má udržovat.
+% correct_bit
+Když uživatel nastaví config data (intervaly), tak k nim STM uloží aktuální timestamp
+a ještě k tomu příznak, který značí, že timestamp je nesynchronizovaný.
+Tento příznak budeme dále označovat jako \texttt{correct\_bit}.
+
+% Problém zpožděného času po synchronizaci
+V souvislosti se vzdáleností STM od serveru a se zpožděním síťové komunikace se může
+stát, že čas na STM bude o pár sekund opožděný (nemělo by to ale být více než 2 sekundy -
+viz \texttt{[packet\_over\_world\_benchmark]}).
+Kdyby se uživateli například podařilo na serveru uložit nové nastavení intervalů
+a pár mikro sekund poté nastavit nové intervaly na STM, mělo by STM správně nahrát
+intervaly na server, namísto toho ale intervaly stáhne ze serveru a svoje nastavení přepíše.
+Předpokládejme, že uživatel toto dělat nebude.
+
+\subsubsection{Synchronizace intervalů}
+% STM si po synchronizaci času přepíše timestampy u intervalů
+
+
+% řešení s p
+% TODO: Dát tohle všechno do specifikace_http_zprav.tex??
+Předtím než dojde k samotné výměně config dat, je potřeba vyměnit timestamp těchto dat.
+Fungování je jednoduché:
+- ze strany A do strany B pošleme timestamp
+- strana B porovná právě přijatý timestamp se svým timestampem a na základě toho buď pošle
+    straně A svoji položku, nebo si od strany A vyžádá její položku.
+V našem případě je jedno, kdo bude timestamp porovnávat - zvolíme tedy STM.
+% efektivita řešení
+Toto řešení mimo jiné dovoluje po modifikaci config dat na STM nebo na serveru
+tyto data poslat pouze jednou a zbytečně nevytěžovat síťovou komunikaci periodickým
+posíláním.
+
+STM musí poslat config data pouze v případě kdy má novější timestamp než server.
+
+
+% Jak budeme využívat HTTP?
+
+\input{analyza/comm/zabezpeceni.tex}

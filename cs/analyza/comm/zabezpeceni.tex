@@ -1,0 +1,79 @@
+
+\subsection{Zabezpečení}
+
+% Co požadujeme
+\paragraph{Požadavky}
+\begin{itemize}
+    \item Autentikace zpráv: potřebujeme zajistit, aby server přijímal pouze zprávy od STM a nikoho jiného.
+    \item Šifrování zpráv: šifrovat budeme jak hlavičky, tak těla HTTP zpráv. Z hlediska bezpečnosti
+        je to lepší než šifrovat pouze těla.
+\end{itemize}
+
+
+% použití HTTPS?
+\paragraph{HTTPS}
+Komunikace webového serveru s STM by mohla být kompletně vedena v HTTPS.
+Pro HTTPS potřebujeme na STM TLS.
+To je poskytováno například knihovnou Cyclone-SSL, která je závislá na knihovně Cyclone-TCP/IP.
+My už jsme ovšem pro STM použili knihovnu LwIP, protože STM poskytuje ethernetový driver přímo
+pro tuto knihovnu a tím pádem můžeme LwIP rovnou použít.
+Kdybychom ale chtěli použít Cyclone-TCP/IP, tak bychom museli ještě implementovat driver pro
+tuto knihovnu.
+Závěr je tedy takový, že HTTPS používat nebudeme.
+
+% Symetrické VS asymetrické šifrování
+\paragraph{Symetrické nebo asymetrické šifrování}
+Kdybychom chtěli použít pouze \emph{asymetrické} šifrování, server by měl privátní klíč a každé STM
+by šifrovalo komunikaci veřejným klíčem.
+Problém tohoto řešení je nedostatečná autentizace - veřejný klíč může získat každý, nejen STM.
+Pro naše účely je tedy lepší použít \emph{symetrické} šifrování.
+% jaké šifrování? --> DES
+Potřebujeme, aby uživatel mohl pohodlně zadat klíč do STM.
+Bude se nám tedy hodit šifrování s krátkým klíčem, což je například DES, které má
+klíč délky 8 bitů.
+Pro naše využití to je dostačující zabezpečení.
+
+
+% Kde vzít klíče?
+Pro symetrické šifrování potřebujeme, aby existovalo tolik párů klíčů, jako je STM zařízení.
+Jeden z páru má server a druhý STM.
+Následující text se zabývá problémem kde a kdy vzít tyto klíče.
+\\ \\ 
+Máme dvě možnosti:
+\begin{itemize}
+    \item STM má hardcoded klíč ve svém FW a server má databází všech těchto klíčů.
+    \item Server generuje klíče na žádost uživatele.
+\end{itemize}
+
+% TODO: proč je hardcoded klíč špatný nápad?
+
+% Generování klíčů
+\subsubsection{Generování klíčů}
+
+% Obecné vlastnosti generování klíčů
+Nevýhoda generování klíčů na serveru je ta, že server nemůže vědět, kterému STM má klíč přiřadit.
+
+% Jak server může přiřadit klíče jednotlivým STM?
+% predem, resp. až po přijetí connect
+Server si ke každému STM potřebuje přiřadit klíč.
+I kdyby dopředu věděl, který klíč patří kterému STM, nemůže vědět od kterého STM mu přišla
+\emph{connect} zpráva (což je první zpráva, kterou STM pošle - viz ...), protože dopředu nezná
+IP adresy jednotlivých STM.
+Což znamená, že není důležité, jestli má klíče k zařízením přiřazené předem, nebo jestli
+si je přiřadí až po tom, co od jednotlivých zařízení dostane \emph{connect} zprávu.
+
+% Postup generování klíčů
+\subparagraph{Postup generování klíčů}
+\begin{enumerate}
+    \item Server vygeneruje klíč s omezenou životností na žádost uživatele.
+    \item Uživatel zadá klíč a IP adresu serveru do STM.
+    \item STM pošle šifrovanou \emph{connect} zprávu serveru.
+    \item Server bude dešifrovat zprávu všemi dosud nespárovanými klíči, dokud nedostane korektní
+        \emph{connect} zprávu tj. korektní HTTP hlavičku s tělem obsahujícím existující Device ID.
+    \item Server má sprárované Device ID s klíčem a IP adresou.
+\end{enumerate}
+
+
+
+% UID (TODO: tohle bude v architektuře)
+%Každé STM zařízení má v sobě uložený 96-bitový unikátní identifikátor.

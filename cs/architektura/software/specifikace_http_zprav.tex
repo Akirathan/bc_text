@@ -1,0 +1,82 @@
+\subsection{Specifikace HTTP zpráv}
+
+Tato sekce probírá detaily HTTP komunikace mezi STM a webovým serverem.
+
+% Connection fáze
+\subsubsection{Fáze připojování}
+Nejprve je potřeba vyřešit připojení STM k serveru.
+Chceme totiž uživateli dát vědět zda je STM k serveru připojené a uživatel může tím pádem
+sledovat aktuálně naměřené hodnoty přes web.
+
+Můžeme poslat požadavek typu:
+\begin{packetstm}
+POST /controllers/connect
+Content-Type: text/plain
+
+<device_id>
+\end{packetstm}
+
+\begin{packetserver}
+HTTP/1.1 200 OK
+[options]
+
+<server_real_time>
+\end{packetserver}
+
+\texttt{server\_real\_time} je timestamp odeslaný serverem sloužící k synchronizaci času
+mezi STM a serverem (odkaz).
+
+% Posílání naměřené teploty
+\subsubsection{Odesílání naměřené teploty}
+\begin{packetstm}
+POST /actual/temp
+Content-Type: text/plain
+
+<temp_timestamp>
+<temp_float>
+\end{packetstm}
+
+Kde \texttt{temp\_timestamp} je \texttt{timestamp} značící kdy byla teplota naměřena a
+\texttt{temp\_float} je teplota v desetinné přesnosti.
+
+% Výměna intervalů
+\subsubsection{Výměna intervalů}
+\begin{packetstm}
+GET /config/intervals/timestamp
+\end{packetstm}
+
+\begin{packetserver}
+HTTP/1.1 200 OK
+[options]
+
+<interval_timestamp>
+\end{packetserver}
+
+STM porovná přijatý interval_timestamp se svým timestampem a pokud má novější nastavení než server,
+tak je odešle:
+% odesílání intervalů
+\begin{packetstm}
+POST /config/intervals
+Content-Type: application/octet-stream
+
+<intervals>
+\end{packetstm}
+
+pokud má starší nastavení než server, tak si je od serveru vyžádá:
+% přijímání intervalů
+\begin{packetstm}
+GET /config/intervals
+\end{packetstm}
+
+\begin{packetserver}
+HTTP/1.1 200 OK
+Content-Type: application/octet-stream
+[options]
+
+<intervals>
+\end{packetserver}
+
+\paragraph{Formát intervalů}
+je následující:
+<from> <to> <temp>, kde from a to jsou časy v sekundách v rámci dne a temp je teplota.
+Každá položka má právě 2 B.
