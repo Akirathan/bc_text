@@ -52,7 +52,7 @@ HTTP/1.1 200 OK
 <interval_timestamp>
 \end{packetserver}
 
-STM porovná přijatý interval_timestamp se svým timestampem a pokud má novější nastavení než server,
+STM porovná přijatý \texttt{interval\_timestamp} se svým \texttt{timestampem} a pokud má novější nastavení než server,
 tak je odešle:
 % odesílání intervalů
 \begin{packetstm}
@@ -78,5 +78,6 @@ Content-Type: application/octet-stream
 
 \paragraph{Formát intervalů}
 je následující:
-<from> <to> <temp>, kde from a to jsou časy v sekundách v rámci dne a temp je teplota.
+\texttt{<from>} \texttt{<to>} \texttt{<temp>}, kde \texttt{from} a \texttt{to} jsou
+časy v sekundách v rámci dne a \texttt{temp} je teplota.
 Každá položka má právě 2 B.

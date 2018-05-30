@@ -28,7 +28,7 @@ Což znamená, že iniciátor komunikace musí být STM.
 % Volba HTTP vs custom protocol
 Pro komunikaci mezi webovým serverem a STM (tedy koncovým zařízením) můžeme vybrat buď HTTP nebo vlastní protokol.
 Implementace a otestování vlastního protokolu by bylo příliš pracné, využijeme tedy existujícího HTTP.
-Navíc nám v takovém případě stačí implementovat pouze na straně STM.
+Navíc nám v takovém případě stačí implementovat HTTP pouze na straně STM.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                              SYNCHRONIZACE                                               %
@@ -49,33 +49,33 @@ Tato možnost je ovšem zbytečně složitá na implementaci.
 
 % Synchronizace času - možnosti a proč je potřeba?
 Pro synchronizaci config dat je potřeba, aby server i STM měli nastavený společný čas.
-Vzhledem k tomu, že implementace NTP (Network time protocol) ale i jednoduššího a podobného
-protokolu SNTP (Simple Network Time Protocol) je na STM pracná, zvolíme jiný, jednodušší způsob synchronizace
-času mezi STM a serverem, který bude vycházet z Time Protocolu (TP - TODO odkaz na RFC).
+Vzhledem k tomu, že implementace \emph{NTP} (Network time protocol) ale i jednoduššího a podobného
+protokolu \emph{SNTP} (Simple Network Time Protocol) je na STM pracná, zvolíme jiný, jednodušší způsob synchronizace
+času mezi STM a serverem, který bude vycházet z \emph{TP} (Time protocol).
 
 \subsubsection{Synchronizace času}
 % vyjdeme z TP a upravíme ho pro naše potřeby
 V rámci synchronizace času postačí sekundové rozlišení.
-Vyjdeme z TP, který má sekundové rozlišení, a ještě ho zjednodušíme pro naše účely.
-Podobně jako je tomu u TP, budeme ze serveru posílat počet sekund, které
+Vyjdeme z \emph{TP}, který má sekundové rozlišení, a ještě ho zjednodušíme pro naše účely.
+Podobně jako je tomu u \emph{TP}, budeme ze serveru posílat počet sekund, které
 uběhly od nějakého pevně stanoveného data.
-Na rozdíl od TP to ale ještě zjednodušíme tak, že tento počet sekund bude posílat server
+Na rozdíl od \emph{TP} to ale ještě zjednodušíme tak, že tento počet sekund bude posílat server
 v rámci první HTTP odpovědi.
-Další rozdíl od TP bute ten, že naše počáteční datum nebude 1.1.1900, ale 1.1.2000.
+Další rozdíl od \emph{TP} bute ten, že naše počáteční datum nebude \texttt{1.1.1900}, ale \texttt{1.1.2000}.
 % definice timestamp
-\textbf{Timestampem} budeme dále uvažovat číslo reprezentující počet sekund od 1.1.2000 00:00,
+\textbf{Timestampem} budeme dále uvažovat číslo reprezentující počet sekund od \texttt{1.1.2000 00:00},
 které se vejde do 4-bytové proměnné bez znamenénka.
 
 % uživatel musí nastavit čas při zapnutí
 Při zapnutí STM musí uživatel nastavit čas. (TODO: viz ...)
-Nemá možnost nastavit datum - to je implicitně nastaveno na 1.1.2000 (dále označováno jako \texttt{REF\_DATE})
+Nemá možnost nastavit datum - to je implicitně nastaveno na \texttt{1.1.2000} (dále označováno jako \texttt{REF\_DATE}).
 Je to nutné kvůli tomu, aby STM vědělo který interval je zrovna nastavený.
 Uživatel může nastavit libovolný čas, který se nijak neshoduje s realitou, jde jen o to,
 aby STM vědělo, jakou teplotu má udržovat.
 % correct_bit
 Když uživatel nastaví config data (intervaly), tak k nim STM uloží aktuální timestamp
 a ještě k tomu příznak, který značí, že timestamp je nesynchronizovaný.
-Tento příznak budeme dále označovat jako \texttt{correct\_bit}.
+Tento příznak budeme dále označovat jako \textbf{correct\_bit}.
 
 % Problém zpožděného času po synchronizaci
 V souvislosti se vzdáleností STM od serveru a se zpožděním síťové komunikace se může
@@ -86,26 +86,5 @@ a pár mikro sekund poté nastavit nové intervaly na STM, mělo by STM správn�
 intervaly na server, namísto toho ale intervaly stáhne ze serveru a svoje nastavení přepíše.
 Předpokládejme, že uživatel toto dělat nebude.
 
-\subsubsection{Synchronizace intervalů}
-% STM si po synchronizaci času přepíše timestampy u intervalů
-% TODO: ...
-
-% řešení s p
-% TODO: Dát tohle všechno do specifikace_http_zprav.tex??
-Předtím než dojde k samotné výměně config dat, je potřeba vyměnit timestamp těchto dat.
-Fungování je jednoduché:
-- ze strany A do strany B pošleme timestamp
-- strana B porovná právě přijatý timestamp se svým timestampem a na základě toho buď pošle
-    straně A svoji položku, nebo si od strany A vyžádá její položku.
-V našem případě je jedno, kdo bude timestamp porovnávat - zvolíme tedy STM.
-% efektivita řešení
-Toto řešení mimo jiné dovoluje po modifikaci config dat na STM nebo na serveru
-tyto data poslat pouze jednou a zbytečně nevytěžovat síťovou komunikaci periodickým
-posíláním.
-
-STM musí poslat config data pouze v případě kdy má novější timestamp než server.
-
-
-% Jak budeme využívat HTTP?
 
 \input{analyza/comm/zabezpeceni.tex}
