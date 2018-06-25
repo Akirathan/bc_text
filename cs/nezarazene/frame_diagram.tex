@@ -1,0 +1,56 @@
+
+Jak víme z předchozích kapitol, jednotlivé obrazovky na STM odpovídají jednotlivým
+\texttt{Frame}s v kódu.
+V této kapitole se budeme zabývat za jakých okolností se spustí jaké obrazovky.
+
+% Stavy vzhledem ke GUI.
+Nejprve specifikujeme v jakých stavech se STM může nacházet.
+Toto jsou pouze stavy, které nás zajímavý v kontextu GUI - tj. v kontextu toho co všechno chceme
+uživateli zobrazit.
+Rozhodně se nejedná o souhrn všech možný stavů.
+\subsection{Stavy STM}
+\begin{itemize}
+  \item Ethernetová periferie je korektně inicializována a kabel je připojen. Zkráceně budeme
+        značit \texttt{ETH-up}.
+  \item Ethernetový kabel je buď odpojen nebo Ethernetová periferie se z nějakého důvodu
+        neinicializovala. Zkráceně budeme značit jako \texttt{ETH-down}.
+  \item STM je připojeno k serveru. Zkráceně značíme \texttt{CONNECTED}.
+  \item STM je odpojeno od serveru. Zkráceně značíme \texttt{DISCONNECTED}.
+  \item STM se připojuje k serveru, s tím že je nastavený (TODO) nějaký timeout. Zkráceně značíme
+        \texttt{CONNECTING}.
+  \item V EEPROM nejsou uložena žádná konfigurační data intervalů. Tento stav nastává pouze v případě,
+        kdy uživatel zapne STM poprvé.
+  \item V EEPROM jsou uložena konfigurační data intervalů.
+  \item Uživatel už zadal klíč (viz ...) do STM. Tento klíč se ukládá do EEPROM, aby ho uživatel
+        nemusel zadávat opakovaně.
+  \item Uživatel ještě klíč nezadal. To znamená, že se ještě nepokoušel připojit k serveru.
+\end{itemize}
+
+% Invarianty - co chceme aby v rámci GUI platilo.
+\subsection{Invarianty}
+ETH-up a ETH-down se může v podstatě libovolně střídat v běhu aplikace a chceme o tom uživateli
+dát vědět.
+Pokud se za běhu aplikaceme dostaneme do stavu \texttt{ETH-up}, dáme uživateli možnost připojit
+se k serveru.
+Pokud jsme ve stavu \texttt{CONNECTED}, nemůžeme se odpojit. Jedině pokud resetujeme celé STM.
+Pokud STM vůbec není připojeno k internetu a EEPROM je prázdná, dáme uživateli možnost nastavit
+intervaly.
+
+% Popis přepínání mezi obrazovkami
+\subsection{Popis přepínání mezi framy}
+[TODO: vložený frame diagram]
+
+MainFrame mimo jiné zobrazuje stav \texttt{CONNECTED} nebo \texttt{DISCONNECTED} nebo \texttt{CONNECTING}
+podle výše zminěného popisu.
+% tlačítko connect
+Pokud je stav \texttt{DISCONNECTED} a zároveň \texttt{ETH-up}, objeví se v MainFrame tlačítko connect,
+pomocí kterého se uživatel dostane na obrazovku KeyFrame, kam může zadat klíč vygenerovaný serverem a
+připojit se tak na server.
+
+% Výhody řešení
+\subsection{Výhody řešení}
+- Uživatel nemusí dvakrát zadávat klíč - ten se poprvé prostě uloží do EEPROM.
+- Pokud je STM připojeno k internetu, rovnou se připojí k serveru, popřípadě zobrazí KeyFrame pokud
+  ještě nebyl zadaný klíč.
+  - Tím že se STM rovnou připojí k serveru, ušetří uživateli zadávání času a čas rovnou synchronizuje
+    se serverem.
