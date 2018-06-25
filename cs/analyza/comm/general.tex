@@ -61,14 +61,14 @@ Podobně jako je tomu u \emph{TP}, budeme ze serveru posílat počet sekund, kte
 uběhly od nějakého pevně stanoveného data.
 Na rozdíl od \emph{TP} to ale ještě zjednodušíme tak, že tento počet sekund bude posílat server
 v rámci první HTTP odpovědi.
-Další rozdíl od \emph{TP} bute ten, že naše počáteční datum nebude \texttt{1.1.1900}, ale \texttt{1.1.2000}.
+Další rozdíl od \emph{TP} bute ten, že naše počáteční datum nebude \texttt{1.1.1900}, ale \texttt{1.1.1970}.
 % definice timestamp
-\textbf{Timestampem} budeme dále uvažovat číslo reprezentující počet sekund od \texttt{1.1.2000 00:00},
+\textbf{Timestampem} budeme dále uvažovat číslo reprezentující počet sekund od \texttt{1.1.1970 00:00},
 které se vejde do 4-bytové proměnné bez znamenénka.
 
 % uživatel musí nastavit čas při zapnutí
 Při zapnutí STM musí uživatel nastavit čas. (TODO: viz ...)
-Nemá možnost nastavit datum - to je implicitně nastaveno na \texttt{1.1.2000} (dále označováno jako \texttt{REF\_DATE}).
+Nemá možnost nastavit datum - to je implicitně nastaveno na \texttt{1.1.1970} (dále označováno jako \texttt{REF\_DATE}).
 Je to nutné kvůli tomu, aby STM vědělo který interval je zrovna nastavený.
 Uživatel může nastavit libovolný čas, který se nijak neshoduje s realitou, jde jen o to,
 aby STM vědělo, jakou teplotu má udržovat.
