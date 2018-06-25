@@ -59,6 +59,7 @@ tak je odešle:
 POST /config/intervals
 Content-Type: application/octet-stream
 
+<intervals_timestamp>
 <intervals>
 \end{packetstm}
 
@@ -77,7 +78,7 @@ Content-Type: application/octet-stream
 \end{packetserver}
 
 \paragraph{Formát intervalů}
-je následující:
+je následující (stejný jako formát, ve kterém si samo STM intervaly ukládá do své EEPROM)
 \texttt{<from>} \texttt{<to>} \texttt{<temp>}, kde \texttt{from} a \texttt{to} jsou
 časy v sekundách v rámci dne a \texttt{temp} je teplota.
-Každá položka má právě 2 B.
+Každá položka reprezentuje 4 bajtové neznaménkové číslo.
