@@ -1,17 +1,49 @@
-\subsection{Technologie}
+\section{Technologie}
 Tato kapitola se zabývá technologiemi, které máme v rámci naší práce k dispozici.
 
 % Koncové zařízení
-\subsubsection{Koncové zařízení}
+\subsection{Koncové zařízení}
 Koncovým zařízením máme na mysli samotný termostat, který měří teplotu u uživatele doma.
-% požadované IO koncového zařízení
+% high-level pohled: embedded / linux
+Zařízení má poměrně jednoduchou úlohu - má pouze měřit teplotu, umožnit uživateli nastavit teplotu po
+různé časové intervlz a to všechno periodicky posílat na server.
+K vykonání takto jednoduché úlohy nepotřebujeme příliš paměti, ani výkonný procesor.
+Bohatě nám vystačí zhruba 256 KB paměti pro kód a 64 KB RAM paměti.
+Po zařízení také požadujeme, aby nebylo příliš drahé a tím pádem neobsahovalo zbytečně výkonný
+hardware, který nevyužijeme.
+To rovnou vyřazuje z výběru zařízení typu Raspberry Pi (TODO: odkaz?).
+% S Linuxem by bylo snadnější programování
+Tím, že ušetříme na hardware, si zase ztížíme práci na software.
+Kdybychom totiž použili zařízení typu Raspberry Pi, mohli bychom do něj, díky relativně
+výkonnému hardware, nahrát operační systém Linux a tím pádem bychom měli k dispozici nejen
+abstrakci nad hardware, ale také v podstatě libovolnou technologii, kterou bychom mohli použít
+při programování našeho software.
+Jediné co by mohlo být problematické s použitím Linuxu je komunikace s externími hardwarovými (?)
+komponentami.
+
+
+% Požadované IO koncového zařízení
+\subsubsection{Vstupně-výstupní požadavky}
 Vzhledem k tomu, že chceme aby zařízení zobrazovalo aktuální údaje a navíc aby uživatel mohl
 různé údaje na zařízení nastavovat, potřebujeme aby zařízení mělo alespoň malý displej.
 Pro vstup od uživatele bychom mohli použít buď sadu tlačítek nebo joystick což se dá považovat
 za téměř ekvivalentní řešení.
 Dále by se dal použít dotykový displej, ten je ale pro naše účely zbytečně nákladný.
 
+% Vybereme STM3210C-Eval
+V našem případě použijeme zařízení STM3210C-Eval board se zabudovaným 3,2 palcovým displejem,
+joystickem, GPIO konektory a ethernetovým konektorem.
+Povaha našeho firmware umožňuje použít jiné zařízení z rodiny STM32 pouze s drobnými modifikacemi.
+
+STM3210C-Eval board nepatří mezi nejlevnější zařízení, na druhou stranu ale obsahuje obrovské
+množství periferií které nevyužijeme - například CAN, Motor control, SD kartu, apod.
+
+% TODO: formátovat poznámku
+\strong{Poznámka}: ve zbytku textu budeme koncové zařízení označovat pouze jako \emph{STM}.
+
 % teplotní senzor
+\subsubsection{Externí komponenty}
+\paragraph{Teplotní senzor}
 Dále potřebujeme dostatečně přesný a zároveň levný teplotní senzor.
 K tomu účelu nám vystačí DS18B20, který můžeme k téměř jakémukoli zařízení připojit pomocí tří
 GPIO konektorů - napájení, uzemnění a data.
@@ -21,16 +53,28 @@ Při maximální přesnosti měření na čtyři desetinná místa stupňů cels
 750 ms.
 
 % relé modul
+\paragraph{Relé modul}
 Jako poslední potřebujeme relé modul, který nám umožní spouštět připojený kotel.
 
 
-V našem případě používáme STM3210C-Eval board.
-Pro nahrávání firmware do této desky používáme ST-Link přítomný na STM32F4-Discovery.
-Povaha našeho firmware umožňuje použít jiné zařízení z rodiny STM32 pouze s drobnými modifikacemi.
+% Server
+\subsection{Webový server}
+% Požadavky
+Na webový server máme následující požadavky:
+\begin{itemize}
+  \item Podpora více zařízení pro jednoho uživatele.
+  \item Zobrazování naměřené teploty a nastavených intervalů každého zařízení.
+  \item Možnost přenastavit intervaly.
+\end{itemize}
 
-STM3210C-Eval board nepatří mezi nejlevnější zařízení, na druhou stranu ale obsahuje obrovské
-množství periferií které nevyužijeme - například CAN, Motor control, ...
+% kde poběží - koncové zařízení/externě?
+Požadavek na podporu zobrazování hodnot z více zařízení najednou téměř znemožňuje použití koncového
+zařízení jako webového serveru.
+A to jednak malou výkonností koncového zařízení, ale také přílišnou složitostí řešení - museli bychom
+se totiž rozhodovat, které koncové zařízení jednoho uživatele použijeme jako webový server a nebo bychom
+museli uživateli dodat úplně jiné zařízení, na kterém webový server poběží.
 
-% Web server
-
-
+V našem případě bude lepší použít právě jeden centrální webový server, který poběží na hardwaru typického
+serveru.
+Mimo jiné můžeme na tomto centrálním webovém serveru s výhodou využít architektury LAMP (TODO: odkaz),
+která nám výrazně usnadní vývoj webu.
