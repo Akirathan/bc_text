@@ -3,56 +3,5 @@
 V této kapitole rozebereme možnosti návrhu celého systému.
 ...
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%  web server %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Web server}
-
-\subsection{Funkcionalita}
-% Obecné věci
-Webový server slouží jako dálkové rozhraní mezi uživatelem a zařízením.
-Uživatel může odkudkoli kde má připojení k internetu zkontrolovat činnost zařízení
-a případně ho přenastavit.
-
-Server podporuje pouze jeden druh zařízení (STM smart heating), nicméně je naprogramován
-tak, že pro případné rozšíření na více druhů zařízení nemusíme v programu dělat veliké
-změny.
-
-\subsection{Použité technologie}
-
-\subsubsection{Backend}
-% Backend framework a proč ho používat?
-Přestože očekáváme, že koečná webová aplikace bude poměrně malá a to jak požadovanou funkcionalitou, tak svým
-vzhledem, použitím některého z webových backend frameworků nám může velice usnadnit práci, například v těchto
-aspektech:
-\begin{itemize}
-    \item Zabudovaná podpora uživatelů - nám jen stačí přidat uživatelům odkazy na jejich
-        zařízení.
-    \item Template system nám umožňuje v HTML stránkách používat speciální
-        tagy, díky kterým můžeme například do HTML stránky vložit hodnotu proměnné, nebo ... (TODO)
-        Template system nakonec vygeneruje validní HTML stránku.
-    \item Zabudovaná podpora databázových systémů - většina backend frameworků poskytuje vrstvu abstrakce nad
-        databázovýmy(?) systémy. V praxi to znamená, že nikde v kódu nemusíme přímo vytvářet SQL dotazy,
-        stačí používat funkční API pro databáze v programovacím jazyce, ve kterém je daný framework napsaný.
-\end{itemize}
-
-% Různé frameworky a jaký je mezi nimi rozdíl
-Existuje mnoho různých backend frameworků.
-Jsou to například NodeJS napsaný v Javascriptu, Ruby on Rails napsaný v Ruby, Django napsaný v Pythonu a
-Laravel napsaný v PHP. % TODO: formátovat jednotlivé názvy, případně přidat reference
-Všechny tyté frameworky nám mohou usnadnit práci podobným způsobem, pro naši aplikaci se liší především
-tím jaký programovací jazyk používají.
-
-% Výběr Djanga
-Vzhledem k tomu, že pro naši aplikaci je pro výběr konkretního frameworku relevantní pouze to jaký programovací
-jazyk používá, a vzhledem k tomu, že autor má předchozí zkušenosti s Pythonem, vybereme Django.
-
-\subsubsection{Frontend}
-% Bootstrap
-Vytváření vzhledu webu si usnadníme použitím knihovny Bootstrap.
-Ta nám umožňuje snadno vytvořit moderně vypadající responsive webovou aplikaci. % TODO: co znamená responsive?
-
-% Device stránka bude interaktivní, protože na ní budou všechny zařízení
-...
 
 \input{analyza/comm/general.tex}
