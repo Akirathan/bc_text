@@ -1,0 +1,37 @@
+\subsubsection{Software}
+Tato kapitola se zabývá tím, jak může vypadat výsledný software resp. firmware na STM.
+Součástí toho je krátký přehled knihoven, které můžeme k vývoji využít a jejich porovnání.
+
+% RTOS - použít či nepoužít
+\paragraph{RTOS}
+Existuje více variant RTOSu.
+Pro naše účely bychom mohli použít například FreeRTOS (TODO: reference).
+FreeRTOS funguje v podstatě pouze jako plánovač úloh - v naší aplikaci definujeme entry point
+úlohy, její prioritu apod. a pak ji spustíme.
+% RTOS a LwIP (jeho výhody)
+Největší výhoda FreeRTOSu je při použití TCP/IP komunikace, resp. LwIP knihovny.
+Umožňuje nám totiž programovat v tzv. LwIP sekvenčním API tj. vytvoření nového TCP spojení
+a následném poslání dat můžeme naprogramovat v jednom bloku kódu.
+LwIP při použití s RTOSem totiž pro příjem a odesílání paketů vytvoří nový task.
+Na druhou stranu při použití LwIP bez RTOSu musíme programovat v tzv. callback API.
+V tomto případě reaguje LwIP na události jako je například přijetí paketu, navázání TCP spojení, atd.,
+tak, že zavolá uživatelem specifikovanou callback funkci.
+Což znamená, že na zdánlivě velice jednoduchou úlohu typu: vytvoř TCP spojení a pošli 20 bajtů dat
+potřebujeme alespoň tři odlišné funkce.
+% Nevýhody RTOSu
+Nevýhoda RTOSu nastává v momentě, kdy chceme aby víc různých tasků přistupovalo ke stejným datům
+a musíme tasky synchronizovat.
+To může být zdrojem špatně replikovatelných a laditelných chyb.
+% RTOS je pro nás zbytečný
+Použití RTOSu pro naši aplikaci je zbytečné.
+Přestože bychom mohli několik "tasků", které v rámci naší aplikace vykonáváme, pohodlně vytvořit
+a spustit s použitím RTOSu, bohatě nám postačí tyto "tasky" spouštět při vypršení hardwarových
+timerů.
+
+
+
+\paragraph{GUI}
+Pro vývoj uživatelského rozhraní můžeme použít buď knihovnu typu STemWin (odkaz), nebo můžeme
+vytvořit vlastní jednoduchou knihovnu.
+Vzhledem k možných komplikacím při integraci tak veliké knihovny jako je STemWin a tomu, že
+předpokládáme velice jednoduché GUI na STM, je lepší implementovat vlastní knihovnu.

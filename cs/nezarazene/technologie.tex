@@ -1,0 +1,36 @@
+\subsection{Technologie}
+Tato kapitola se zabývá technologiemi, které máme v rámci naší práce k dispozici.
+
+% Koncové zařízení
+\subsubsection{Koncové zařízení}
+Koncovým zařízením máme na mysli samotný termostat, který měří teplotu u uživatele doma.
+% požadované IO koncového zařízení
+Vzhledem k tomu, že chceme aby zařízení zobrazovalo aktuální údaje a navíc aby uživatel mohl
+různé údaje na zařízení nastavovat, potřebujeme aby zařízení mělo alespoň malý displej.
+Pro vstup od uživatele bychom mohli použít buď sadu tlačítek nebo joystick což se dá považovat
+za téměř ekvivalentní řešení.
+Dále by se dal použít dotykový displej, ten je ale pro naše účely zbytečně nákladný.
+
+% teplotní senzor
+Dále potřebujeme dostatečně přesný a zároveň levný teplotní senzor.
+K tomu účelu nám vystačí DS18B20, který můžeme k téměř jakémukoli zařízení připojit pomocí tří
+GPIO konektorů - napájení, uzemnění a data.
+Jedna z výhod teplotního senzoru DS18B20 je ta, že sám provádí převod z analogové naměřené
+teploty na digitální data.
+Při maximální přesnosti měření na čtyři desetinná místa stupňů celsia trvá tento převod zhruba
+750 ms.
+
+% relé modul
+Jako poslední potřebujeme relé modul, který nám umožní spouštět připojený kotel.
+
+
+V našem případě používáme STM3210C-Eval board.
+Pro nahrávání firmware do této desky používáme ST-Link přítomný na STM32F4-Discovery.
+Povaha našeho firmware umožňuje použít jiné zařízení z rodiny STM32 pouze s drobnými modifikacemi.
+
+STM3210C-Eval board nepatří mezi nejlevnější zařízení, na druhou stranu ale obsahuje obrovské
+množství periferií které nevyužijeme - například CAN, Motor control, ...
+
+% Web server
+
+

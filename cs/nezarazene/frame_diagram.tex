@@ -1,6 +1,4 @@
 
-Jak víme z předchozích kapitol, jednotlivé obrazovky na STM odpovídají jednotlivým
-\texttt{Frame}s v kódu.
 V této kapitole se budeme zabývat za jakých okolností se spustí jaké obrazovky.
 
 % Stavy vzhledem ke GUI.
@@ -37,20 +35,122 @@ Pokud STM vůbec není připojeno k internetu a EEPROM je prázdná, dáme uživ
 intervaly.
 
 % Popis přepínání mezi obrazovkami
-\subsection{Popis přepínání mezi framy}
-[TODO: vložený frame diagram]
+\subsection{Popis jednotlivých obrazovek}
 
-MainFrame mimo jiné zobrazuje stav \texttt{CONNECTED} nebo \texttt{DISCONNECTED} nebo \texttt{CONNECTING}
-podle výše zminěného popisu.
+% Vyjmenování GUI prvků, které budeme potřebovat
+V rámci celého GUI nám stačí tyto grafické prvky:
+\begin{itemize}
+  \item Tlačítka, pomocí kterých budeme chtít potvrzovat data zadaná do jednotlivých obrazovek
+    a přepínat tím na další obrazovky.
+  \item Okna s nastavitelnou hodnotou kde hodnota může být například čas v minutách, nebo teplota.
+    Uživatel může hodnotu nastavit pomocí joysticku.
+  \item Okna, která slouží pouze pro zobrazování nějaké hodnoty - například aktuálního času, nebo
+    naměřené teploty.
+  \item Různé nápisy resp. nadpisy pro lepší přehlednost.
+\end{itemize}
+
+Nejprve uvedeme nákresy jednotlivých obrazovek a popíšeme co znamenají.
+Potom uvedeme tzv. frame diagram tj. stavový diagram obrazovek, kde popíšeme jak se mezi sebou
+jednotlivé obrazovky přepínají.
+
+Zeleně zabarvený text v obrázcích (TODO: ztučněný, pokud nebudeme tisknout barevně) představuje
+buď nakliknutelný čudlík nebo měnitelný prvek - například čas.
+Jak jsme již zmiňovali STM se ovládá pomocí joysticku pod displejem.
+Pohybem joysticku do stran přepínáme mezi jednotlivými nakliknutelnými prvky.
+Pohybem joysticku nahoru a dolu měníme hodnoty právě nakliknutých prvků, pokud to jde.
+Nakliknutý prvek na displeji STM poznáme podle červeného zabarvení.
+
+% clk_frame
+\subsubsection{ClkFrame}
+\begin{figure}[p]\centering
+\includegraphics[width=140mm, height=140mm]{../img/clk_frame.jpg}
+\caption{ClkFrame - nastavení času}
+\label{clk-frame}
+\end{figure}
+
+Tato obrazovka je zobrazena po startu STM v momentě, kdy Ethernetová periferie není inicializována a
+STM se tedy nemůže připojit k serveru aby rovnou synchronizovalo čas.
+
+% set_interval_frame
+\subsubsection{SetIntervalFrame}
+\begin{figure}[p]\centering
+\includegraphics[width=140mm, height=140mm]{../img/interval_setting_frame.jpg}
+\caption{SetIntervalFrame - nastavení intervalů}
+\label{set-interval-frame}
+\end{figure}
+
+Tato obrazovka umožňuje uživateli nastavit časové intervaly s teplotou.
+Obrazovka zobrazuje nastavení pro právě jeden interval, pokud uživatel stiskne tlačítko
+"Next", zobrazí se nastavení dalšího intervalu, pokud stiskne tlačítko "End", nastavování
+intervalů se ukončí a všechny nastavené intervaly jsou uloženy do EEPROM.
+
+Zobrazena je v těchto případech:
+\begin{itemize}
+  \item když EEPROM neobsahuje žádné nastavení intervalů což nastává v případě kdy uživatel
+    ještě žádné intervaly nenastavoval - tedy po prvním spuštění STM.
+  \item Když uživatel zmáčkne v obrazovce \texttt{MainFrame} čudlík "reset intervals".
+\end{itemize}
+
+% overview_interval_frame
+\subsubsection{OverviewIntervalFrame}
+OverviewIntervalFrame neboli "přehled všech nastavených intervalů" vypadá stejně jako SetIntervalFrame
+až na to, že intervaly nejdou nastavovat, pouze prohlížet.
+Tlačítkem "Next" se můžeme proklikat postupně přes všechny intervaly a tlačítkem "End" zobrazování
+ukončit.
+
+% connect_frame
+\subsubsection{ConnectFrame}
+\begin{figure}[p]\centering
+\includegraphics[width=140mm, height=140mm]{../img/connect_frame.jpg}
+\caption{ConnectFrame - připojení k serveru}
+\label{connect-frame}
+\end{figure}
+
+Tato obrazovka je zobrazena ihned po spuštění STM v momentě, kdy Ethernetová periferie je inicializována
+a klíč ještě není uložen v EEPROM.
+V takovém případě se STM může ihned připojit k serveru a nemusíme uživatele zdržovat s nastavováním
+času.
+
+% key_frame
+\subsubsection{KeyFrame}
+\begin{figure}[p]\centering
+\includegraphics[width=140mm, height=140mm]{../img/key_frame.jpg}
+\caption{KeyFrame - zadání klíče vygenerovaného serverem}
+\label{key-frame}
+\end{figure}
+
+Do této obrazovky uživatel musí zadat 8-bytový DES klíč vygenerovaný na serveru.
+Po stisknutí tlačítka "Submit" se STM pokusí přihlásit na server.
+
+% main_frame
+\subsubsection{MainFrame}
+\begin{figure}[p]\centering
+\includegraphics[width=140mm, height=140mm]{../img/main_frame.jpg}
+\caption{MainFrame - hlavní obrazovka}
+\label{main-frame}
+\end{figure}
+
+MainFrame reprezentuje hlavní obrazovku.
+Jsou zde zobrazeny zásadní hodnoty - aktuálně naměřená teplota (actual temp), přednastavená teplota
+(set temp), stav připojení k serveru.
 % tlačítko connect
-Pokud je stav \texttt{DISCONNECTED} a zároveň \texttt{ETH-up}, objeví se v MainFrame tlačítko connect,
+Pokud je stav \texttt{DISCONNECTED} a zároveň \texttt{ETH-up}, objeví se v MainFrame tlačítko "connect",
 pomocí kterého se uživatel dostane na obrazovku KeyFrame, kam může zadat klíč vygenerovaný serverem a
 připojit se tak na server.
+V případě kdy je klíč uložen v EEPROM, tak se STM, po stisku tlačítka "connect" rovnou připojí k serveru
+a pouze zobrazí stav \texttt{CONNECTING}.
 
-% Výhody řešení
-\subsection{Výhody řešení}
-- Uživatel nemusí dvakrát zadávat klíč - ten se poprvé prostě uloží do EEPROM.
-- Pokud je STM připojeno k internetu, rovnou se připojí k serveru, popřípadě zobrazí KeyFrame pokud
-  ještě nebyl zadaný klíč.
-  - Tím že se STM rovnou připojí k serveru, ušetří uživateli zadávání času a čas rovnou synchronizuje
-    se serverem.
+Uživatel se z MainFrame také může dostat do SetIntervalFrame pomocí "reset intervals" tlačítka a do
+OverviewIntervalFrame pomocí "overview intervals" tlačítka.
+
+%%%%%%%%%%%%%%%
+% Frame diagram
+%%%%%%%%%%%%%%%
+\subsection{Vztahy mezi obrazovkami}
+
+\begin{figure}[p]\centering
+\includegraphics[width=140mm, height=140mm]{../img/frame_diagram.jpg}
+\caption{Diagram přepínání obrazovek}
+\label{frame-diagram}
+\end{figure}
+
