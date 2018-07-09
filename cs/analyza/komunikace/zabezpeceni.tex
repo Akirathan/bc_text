@@ -45,7 +45,13 @@ Máme dvě možnosti:
     \item Server generuje klíče na žádost uživatele.
 \end{itemize}
 
-% TODO: proč je hardcoded klíč špatný nápad?
+% Proč je hardcoded klíč špatný nápad?
+Mít klíč zabudovaný do FW STM není příliš vhodné pro případy, kdy by si uživatel pořídil STM
+"z druhé ruky".
+Zejména je zde nižší zabezpečení nového vlastníka STM, bývalý vlastník by totiž teoreticky
+mohl z FW dostat podobu klíče a podvrhovat komunikaci.
+
+Proto zvolíme řešení s generováním nových klíčů na žádost uživatele.
 
 % Generování klíčů
 \subsubsection{Generování klíčů}
@@ -66,13 +72,12 @@ si je přiřadí až po tom, co od jednotlivých zařízení dostane \emph{conne
 \subparagraph{Postup generování klíčů}
 \begin{enumerate}
     \item Server vygeneruje klíč s omezenou životností na žádost uživatele.
-    \item Uživatel zadá klíč a IP adresu serveru do STM.
+    \item Uživatel zadá klíč do STM.
     \item STM pošle šifrovanou \emph{connect} zprávu serveru.
     \item Server bude dešifrovat zprávu všemi dosud nespárovanými klíči, dokud nedostane korektní
         \emph{connect} zprávu tj. korektní HTTP hlavičku s tělem obsahujícím existující Device ID.
     \item Server má sprárované Device ID s klíčem a IP adresou.
 \end{enumerate}
-
 
 
 % UID (TODO: tohle bude v architektuře)
