@@ -2,6 +2,17 @@
 Tato kapitola se zabývá tím, jak může vypadat výsledný software resp. firmware na STM.
 Součástí toho je krátký přehled knihoven, které můžeme k vývoji využít a jejich porovnání.
 
+% STM32CubeF1
+\subsubsection{STM32CubeF1}
+Výrobce STM poskytuje pro rodinu procesorů F1 balíček \emph{STM32CubeF1} obsahující různé knihovny
+pro abstrakci hardware na deskách obsahujících procesory F1.
+Zde je důležité zmínit výhodu použití nezměněné desky STM3210C-Eval board od STM oproti poskládání
+vlastní desky z různých hardware komponent.
+Kromě knihovny \emph{HAL} (Hardware abstraction layer), která poskytuje abstrakci nad všemi
+periferiemi na desce, obsahuje totiž \emph{STM32CubeF1} i knihovny \emph{BSP} (Board support package),
+které poskytují abstrakce pro rozšíření specifická pro jednotlivé desky.
+V našem případě je to například displej a joystick.
+
 % RTOS - použít či nepoužít
 \subsubsection{RTOS}
 Existuje více variant RTOSu.
@@ -28,9 +39,32 @@ Přestože bychom mohli několik "tasků", které v rámci naší aplikace vykon
 a spustit s použitím RTOSu, bohatě nám postačí tyto "tasky" spouštět při vypršení hardwarových
 timerů.
 
-
+% GUI - knihovny pro GUI
 \subsubsection{GUI}
 Pro vývoj uživatelského rozhraní můžeme použít buď knihovnu typu STemWin (odkaz), nebo můžeme
 vytvořit vlastní jednoduchou knihovnu.
 Vzhledem k možných komplikacím při integraci tak veliké knihovny jako je STemWin a tomu, že
 předpokládáme velice jednoduché GUI na STM, je lepší implementovat vlastní knihovnu.
+
+\subsubsection{TCP/IP}
+Požadavky na TCP/IP:
+\begin{itemize}
+  \item Pro jednoduchost předpokládejme, že server má statickou, veřejnou IPv4 adresu a nám tedy
+    postačí podpora pro IPv4.
+  \item TCP. To potřebujeme kvůli protokolu HTTP.
+  \item Bylo by vhodné aby knihovna uměla i \emph{DNS}, protože zakódovat IP adresu serveru do firmware
+    STM by bylo jednak velice nepraktické a jednak by to neumožňovalo přesunout server na jinou
+    IP adresu.
+  \item DHCP - určitě totiž nechceme kódovat IP adresu STM do jeho firmware, mohlo by totiž dojít
+    ke kolizi s jiným STM nebo s úplně jiným zařízením například tiskárnou nebo osobním počítačem
+    v rámci sítě, kde se STM vyskytuje.
+\end{itemize}
+% je víc knihoven, ale nemá smysl se jimi zabývat - vezmeme prostě LwIP.
+Na výběr máme z většího množství knihoven určených pro embedded zařízení s relativně malou pamětí.
+Vzhledem k tomu, že součástí STM32CubeF1 je integrační vrstva pro knihovnu LwIP, která podporuje
+všechny výše zmíněné požadavky a ještě spoustu dalších, nemá smysl se zabývat porovnáváním LwIP
+s jinými TCP/IP knihovnami.
+Navíc ani nepožadujeme aby TCP/IP knihovna byla příliš efektivní.
+V našem případě je tedy nejlepší použít knihovnu LwIP, s tím, že její integrace nám zabere minimálně
+času.
+
