@@ -1,36 +1,60 @@
 \subsection{Tasky}
 
 % Definice tasku
-V následujícím textu budeme označovat task jako sémanticky samostatné výpočetní
+V následujícím textu budeme označovat \emph{task} jako sémanticky samostatné výpočetní
 vlákno.
-V podstatě je to totéž jako task v kontextu FreeRTOS.
-V STM3210C-EVAL je paralelismus pouze virtuální, protože zabudovaný procesor je
-jednojádrový.
+V podstatě je to totéž jako task v kontextu RTOS.
+V STM je paralelismus pouze virtuální, protože procesor je jednojádrový.
 
 % Tasky v naší aplikaci
 Naše aplikace potřebuje provádět 3 tasky:
 \begin{itemize}
-    \item \textbf{GUI task} má na starosti periodicky iterovat přes všechny GUI elementy
-        na displeji a v případě potřeby je překreslit.
+  \item \textbf{GUI task} má na starosti periodicky iterovat přes všechny GUI elementy
+    na displeji a v případě potřeby je překreslit.
 
-    \item \textbf{User input task} má na starosti zjišťovat jestli uživatel zadal nějaký
-        vstup, ať už je to zmáčknutí joysticku, nebo jiného tlačítka, nebo dotek
-        na obrazovku.
+  \item \textbf{User input task} má na starosti zjišťovat jestli uživatel zadal nějaký
+    vstup, ať už je to zmáčknutí joysticku, nebo jiného tlačítka.
 
-        Uživatelský vstup lze zpracovávat i pomocí interrupt handlerů - joystick
-        ale i jiné tlačítka lze nastavit tak, aby při stlačení vyvolali interrupt.
-        Pro naši situaci to ale není výhodné, protože bychom museli mít více různých
-        interrupt handlerů pro každý možný vstup.
-        Lepší je nastavit periodický task tak, aby iteroval všechny možné vstupy. 
+    Uživatelský vstup lze zpracovávat i pomocí interrupt handlerů - joystick
+    ale i jiná tlačítka lze nastavit tak, aby při stlačení vyvolali interrupt.
+    Pro naši situaci to ale není výhodné, protože bychom museli mít více různých
+    interrupt handlerů pro každý možný vstup.
+    Lepší je nastavit periodický task tak, aby iteroval všechny možné vstupy.
 
-    \item \textbf{Ethernet task} má na startosti zpracovávání paketů z ethernetové
-        periferie. Je potřeba periodicky volat funkci z \textit{LwIP} knihovny [LwIP doc].
-        Zpracovávat ethernetové pakety z interrupt handleru není doporučeno [LwIP doc].
+  \item \textbf{Ethernet task} má na startosti zpracovávání paketů z ethernetové
+    periferie. Je potřeba periodicky volat dvě funkce z \textit{LwIP} knihovny -
+    \texttt{ethernetif_input}, která se stará o nízko-úrovňový příjem nebo odesílání paketů resp.
+    bytů z ethernetové periferi, a \texttt{sys_check_timeouts}, která kontroluje platnost různých
+    dočasných hodnot, jako je třeba ARP tabulka, a v případě potřeby je obnoví.
+    Proto je vhodné tento task provádět z mainloop.
 
-    \item \textbf{RTC task} má na starosti zpracovávání sekundového interruptu a jednou za
-        minutu změřit aktuální teplotu. RTC task nemá s RTOS taskem nic společného, je
-        to totiž interrupt handler.
+  \item \textbf{RTC task} má na starosti zpracovávání sekundového interruptu a jednou za
+    minutu změřit aktuální teplotu.
 \end{itemize}
 
-% RTOS vs timery
-% ...
+% Definice mainloop
+Vzhledem k tomu, že firmware je jediné, co v STM poběží, je potřeba aby svůj běh neukončil
+hned po prvním vykreslení obrazovky resp. zpracování pár paketů.
+Potřebovali bychom mít někde ve firmware nekonečný cyklus, který bude zpracovávat naše
+tasky.
+Takovému nekonečnému cyklu budeme říkat \emph{mainloop}.
+V rámci firmware pro embedded zařízení, který nemá RTOS, je použití \emph{mainloop} běžné.
+
+% definice interrupt handler kontextu
+Kromě \emph{mainloop} můžou být tasky vykonávané ještě v rámci interrupt handleru některé
+periferie, například časovače, nebo stisknutí tlačítka.
+Interrupt handlery mají obecně tu výhodu, že jsou spuštěny vždy po určité události -
+v případě časovače je to uplynutí periody.
+
+% mainloop vs interrupt kontext
+Ne všechny tasky je vhodné provádět v kontextu interrupt handleru.
+Například podle dokumentace LwIP není doporučeno volat jakoukoli funkci, která má odesílat
+nebo přijímat pakety z interrupt handleru.
+Proto je potřeba ethernet task provádět vždy v rámci mainloop.
+% User input task je vhodný provádět z interrupt handleru
+Naopak user input task je vhodné provádět v rámci interrupt handleru časovače nastaveného
+na rozumnou periodu.
+Pokud by se totiž měl provádat z mainloop, není jasné jak přesně by měl fungovat, protože čtení
+vstupu od uživatele je samo o sobě blokující funkce.
+
+
