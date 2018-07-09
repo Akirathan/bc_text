@@ -1,0 +1,60 @@
+
+\subsection{Eventy}
+V rámci STM mohou vznikat některé důležité události, které ovlivní víc částí programu.
+
+Mezi tyto události patří:
+\begin{itemize}
+  % IntervalsChangedStmEvent
+  \item Změna intervalů na STM.
+    Jako reakci na tuto událost by STM mělo nově nastavené intervaly uložit do EEPROM a dále
+    tyto intervaly poslat na server v případě, že na serveru jsou nastavené starší intervaly.
+
+  % IntervalsChangedServerEvent
+  \item Příjem intervalů ze serveru o které samo STM požádalo. Reakce na tuto událost je
+    uložení intervalů do EEPROM.
+
+  % ConnectEvent
+  \item Připojení k serveru. Myšleno ne pouze navázané TCP spojení, ale spojení ve smyslu naší
+    aplikace tj. server poslal svůj aktuální čas ve formátu timestampu (viz ...).
+    STM reaguje tak, že si právě přijatý timestamp nastaví jako svůj vlastní čas, tedy
+    uloží timestamp do RTC.
+
+  % MeasuredTemperatureEvent
+  \item Právě naměřená teplota. Tuto hodnotu chceme zobrazit uživateli na STM a také ji poslat
+    na server.
+
+  % CommunicationErrorEvent
+  \item Chyba síťové komunikace. Toutu chybou máme na mysli v podstatě libovolnou síťovou chybu
+    od vypojení ethernetového kabelu až po nemožnost naparsování HTTP reponse.
+    Na tuto událost STM reaguje restartováním celé komunikace.
+    Kvůli složitosti implementace nemá vůbec smysl aby si STM pamatovalo, v jakém stavu chyba
+    nastala a zkoušelo komunikace restartovat právě od tohoto momentu.
+
+  % Eth-link UP
+  \item Zapojení ethernetového kabelu. Jak jsme již zmiňovali v kapitole analýza, uživateli
+    dáváme možnost zapojit nebo odpojit ethernetový kabel za běhu aplikace.
+    Zapojení ethernetového kabelu by v ideálním případě mělo ihned odstartovat pokus o spojení se serverem
+    a výsledek tohoto pokusu oznámit uživateli.
+    Připojit se k serveru může STM pouze pokud má uložený klíč v EEPROM.
+    Pro přehlednost a jednoduchost aplikace stanovíme ještě další podmínku, která musí být splněna
+    před pokusem o připojení k serveru - aktuální obrazovka musí být \texttt{MainFrame}.
+
+  % KeySavedEvent
+  \item Nastavení klíče. Tato událost nastává v momentě, kdy je aktuální obrazovka \texttt{KeyFrame},
+    a uživatel stiskne submit čudlík.
+    STM na to reaguje každopádně uložením klíče do EEPROM a také pokusem o připojení k serveru,
+    pokud jsou všechny podmínky pro tento pokus splněny.
+\end{itemize}
+
+% Všechny eventy jsou předávané do Application
+Každá z výše uvedených událostí je reprezentovaná třídou v programu.
+Problém s připojením je například reprezentován třídou \texttt{CommunicationErrorEvent}, nastavení
+klíče potom třídou \texttt{KeySavedEvent}, apod.
+Události mohou být generované v různých částech programu, \texttt{MeasuredTemperatureEvent} je generovaný
+například v \texttt{TempController}.
+Všechny tyto události musí být po vzniku předány třídě \texttt{Application}, která v tomto případě
+slouží jako centrální autorita ošetřující všechny druhy událostí.
+
+% výhody a nevýhody návrhu
+Výhoda tohoto návrh je v tom, že reakce na všechny důležité události máme na jednom místě.
+Nevýhoda je potom taková, že nesmíme zapomínat události generovat.
