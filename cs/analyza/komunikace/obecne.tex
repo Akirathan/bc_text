@@ -95,7 +95,7 @@ Uživatel může nastavit libovolný čas, který se nijak neshoduje s realitou,
 aby STM vědělo, jakou teplotu má udržovat.
 % correct_bit
 Když uživatel nastaví config data (intervaly), tak k nim STM uloží aktuální timestamp
-a ještě k tomu příznak, který značí, že timestamp je nesynchronizovaný.
+a ještě k tomu příznak, který značí, že timestamp je synchronizovaný.
 Tento příznak budeme dále označovat jako \textbf{correct\_bit}.
 
 % Problém zpožděného času po synchronizaci
@@ -107,4 +107,8 @@ a pár mikro sekund poté nastavit nové intervaly na STM, mělo by STM správn�
 intervaly na server, namísto toho ale intervaly stáhne ze serveru a svoje nastavení přepíše.
 Předpokládejme, že uživatel toto dělat nebude.
 
-
+% Poznámky o time zone
+Z definice timestamp vyplývá, že STM nerozlišuje jednotlivé časové zóny.
+Pro jednoduchost budeme čas na STM interpretovat jako čas v zóně \emph{UTC+2}.
+Pro správnou interpretaci času na STM v různých časových zónách bychom museli implementovat
+sofistikovanější časový protokol typu \emph{NTP}.
