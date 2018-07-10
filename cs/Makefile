@@ -6,7 +6,7 @@ all: prace.pdf
 prace.pdf: prace.tex $(wildcard *.tex) literatura.bib prace.xmpdata
 	echo "================ First run ==============="
 	pdflatex $<
-	#bibtex prace
+	bibtex prace
 	echo "================ Second run ==============="
 	pdflatex $<
 	echo "================ Third run ==============="
