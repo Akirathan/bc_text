@@ -23,7 +23,7 @@ Naše aplikace potřebuje provádět 3 tasky:
 
   \item \textbf{Ethernet task} má na startosti zpracovávání paketů z ethernetové
     periferie. Je potřeba periodicky volat dvě funkce z \textit{LwIP} knihovny -
-    \texttt{ethernetif\_input}, která se stará o nízko-úrovňový příjem nebo odesílání paketů resp.
+    \texttt{ethernetif\_input},~která se stará o nízko-úrovňový příjem nebo odesílání paketů resp.
     bytů z ethernetové periferi, a \texttt{sys\_check\_timeouts}, která kontroluje platnost různých
     dočasných hodnot, jako je třeba ARP tabulka, a v případě potřeby je obnoví.
     Proto je vhodné tento task provádět z mainloop.

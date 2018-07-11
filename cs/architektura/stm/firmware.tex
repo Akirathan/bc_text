@@ -28,7 +28,7 @@ která v STM mohou být uložena, dokážeme předem určit jejich maximální v
 \subparagraph{Real-time vlastnosti}
 Real-time vlastností firmware máme na mysli tu skutečnost, že jsme teoreticky schopni spočítat nebo
 naměřit délku maximální resp. minimální trvání každého tasku.
-Mohli bychom například deklarovat, že \empth{GUI task} (TODO: reference) nesmí trvat déle než
+Mohli bychom například deklarovat, že \emph{GUI task} (TODO: reference) nesmí trvat déle než
 100 ms.
 Pomocí \emph{watchdog} periferie bychom tuto maximální dobu trvání tasku snadno zajistili - v
 případě, kdyby task trval déle, \emph{watchdog} by celý systém resetoval.
@@ -67,13 +67,13 @@ jsou definované přímo v typech, které je používají) a indexy do těchto p
 jestli pole nepřeteklo.
 V drtivé většině těchto případů by bylo daleko snazší použít například \texttt{std::vector}.
 
-Přestože nepoužíváme \emph{STL}, přidá nám C++ další abstrakci, která nám usnadní programování.
+Přestože nepoužíváme \emph{STL}, přidá nám C++ další abstrakci, která nám usnadní~programování.
 
 % Struktura
 \subsubsection{Struktura}
 
 \begin{figure}[tbh]\centering
-\includegraphics[width=140mm, height=140mm]{../diagrams/stm_fw_struktura.jpg}
+\includegraphics[width=140mm, height=140mm]{../diagrams/stm_fw_struktura.pdf}
 \caption{Struktura firmware}
 \label{stm-fw-struktura}
 \end{figure}

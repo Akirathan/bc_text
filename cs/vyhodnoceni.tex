@@ -1,0 +1,68 @@
+
+\section{Vyhodnocení}
+% budeme testovat jenom STM
+V následující kapitole rozebereme způsoby, jakým se dá otestovat funkcionalita celého systému.
+Testování funkcionality serveru není problém, takže se v následujícím textu zaměříme pouze na
+testování STM.
+
+Firmware pro STM se poměrně těžko testuje.
+Hlavně kvůli tomu, že na STM není žádný operační systém, který by spouštěl automatické testy jako
+samostatné procesy a potom nám vrátil vyhodnocení.
+
+
+Části firmware, které nejsou závisle na hardware, je vhodné testovat na PC.
+Takovou částí je například celá síťová komunikace - tedy HTTP klient.
+
+% HW nezávislé komponenty
+\subsection{Hardwarově nezávislé komponenty}
+
+% Device simulator
+\paragraph{Device simulator}
+Device simulator je velice jednoduchý program, který simuluje síťovou část STM.
+Device simulator původně vznikl jako záměr vytvořit jádro síťové komunikace - tedy HTTP klienta,
+parser, a vše co s tím souvisí a to celé poskládat do konzolového programu, který by na vstupu
+dostával příkazy typu "připoj se k server" nebo "změň teplotu".
+Vybudovat jednoduchý mechanismus zpracování příkazů ze vstupu je snadné, nejtěžší část je síťová
+komunikace.
+Hlavní "produkt" device simulatoru mělo být jádro síťové komunikace, které bychom mohli přímo použít
+na STM.
+Mechanismus zpracování příkazů je vedlejším "produktem", nicméně poměrně užitečným - dovolí nám
+to totiž testovat připojení víc STM n aserver najednou.
+Device simulator umí v podstatě pouze provádět \emph{komunikační cyklus} se serverem.
+
+% výhody devsimu
+Výhoda vývoje síťové komunikace v rámci device simulatoru je jasná - můžeme komunikaci testovat
+na jednom PC.
+Navíc je zde i lepší možnost ladění programu, protože po každé nemusíme program nejdřív nahrát
+do flash paměti STM.
+
+Device simulator je součástí přílohy této práce.
+
+% HW závislé komponenty
+\subsection{Hardwarově závislé komponenty}
+Zde se jedná zejména o \emph{Application drivers}, do kterých patří třídy, které s hardware pracují
+buď přímo, nebo přes \texttt{HAL}.
+Pro tyto komponenty můžeme vytvořit něco jako unit testy, které přilinkujeme do zbytku firmware a explicitně
+je zavoláme z funkce \texttt{main}.
+Je to sice nepraktické, ale v některých případech se to může hodit.
+Například tímto způsobem testujeme \texttt{OneWire}, protože implementaci one wire protokolu vytvářel
+autor a je proto potřeba vyzkoušet, jestli to se samotným teplotní sensorem bude nakonec fungovat tak, jak má.
+
+Takových "unit testů" ale není mnoho.
+Jednak kvůli jejich nepraktičnosti, ale zejména kvůli jejich nadbytečnosti.
+Tyto "unit testy" by totiž musely testovat zejména \emph{GUI} část firmware, která by se tímto způsobem
+testovala opravdu těžko.
+
+% Testování celkově funkcionality - tj. testování v reálném prostředí
+\subsection{Testování celkové funkcionality}
+Pro otestování celkové funkcionality, tedy STM, serveru a komunikace mezi nimi, je potřeba připravit
+prostředí, které se bude podobat reálnému použití.
+Server tedy necháme běžet na PC s veřejnou, statickou IP adresou.
+STM připojíme do routeru, který je připojen do internetu.
+Ovšem nemusí to být vyloženě router, stačí když STM připojíme do jiného PC, na kterém poběží
+DHCP server, a bude přeposílat pakety z STM.
+V STM je na pevno zakódovaná URL adresa serveru a navíc je na něm implementováno DNS.
+
+Po tomto zapojení už jen stačí manuálně vyzkoušet funkcionalitu serveru i STM.
+
+

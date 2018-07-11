@@ -1,0 +1,76 @@
+@startuml
+
+package Windows {
+    class Window <<interface>> {
+        + void draw()
+        bool redrawFlag
+        bool lock
+    }
+
+    class IStaticWindow <<interface>> {
+    }
+
+    IStaticWindow --|> Window
+    IControlWindow --|> Window
+
+    class IControlWindow <<interface>> {
+        + Message eventHandler(JoyState)
+    }
+
+    IControlWindow .. Message : uses
+
+    class Button {
+
+    }
+
+    Button --|> IControlWindow
+    HexCharWindow --|> IControlWindow
+
+    class TextWindow {
+
+    }
+
+    TextWindow --|> IStaticWindow
+
+    enum Message {
+        NONE,
+        EXIT,
+        FOCUS_LEFT,
+        FOCUS_RIGHT
+    }
+}
+
+package Frames {
+    class IFrame <<interface>> {
+        + void redraw()
+        + void passControl()
+    }
+
+    class MainFrame {
+
+    }
+
+    class ClkFrame {
+
+    }
+
+    MainFrame --|> IFrame
+    ClkFrame --|> IFrame
+}
+
+IFrame ..> WindowSystem
+WindowSystem ..> IFrame 
+
+WindowSystem ..> Windows
+Windows ..> WindowSystem
+
+class WindowSystem {
+    + void drawAllWindows()
+    + void addControl(IControlWindow *)
+    + void removeControl(IControlWindow *)
+    + void addStatic(IStaticWindow *)
+    + void run()
+    + void stop()
+}
+
+@enduml

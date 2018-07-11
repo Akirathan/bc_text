@@ -2,8 +2,8 @@
 \subsection{Implementace komunikace se serverem}
 V této kapitole se detailněji podíváme na implementaci komunikace se serverem.
 
-\begin{figure}[tbh]\centering
-\includegraphics[width=140mm, height=140mm]{../diagrams/stm_implementace_komunikace.jpg}
+\begin{figure}[H]\centering
+\includegraphics[scale=0.8]{../diagrams/stm_implementace_komunikace.pdf}
 \caption{Diagram tříd v rámci komunikace}
 \label{stm-implementace-komunikace}
 \end{figure}
@@ -62,7 +62,7 @@ potom notifikuje Client pomocí callback metody.
 ResponseBuffer už HTTP response naparsoval a Client na základě toho, v jakém stavu \emph{komunikačního cyklus}
 se nachází, notifikuje CommunicationDevice (na diagramu notifikuje CommunicationDevice o přijetí
 intervalů ze serveru pomocí callback metody \texttt{intervalsReceivedCb}).
-CommunicationDevice dále vygeneruje \exttt{IntervalsChangedServerEvent} a pošle do Application
+CommunicationDevice dále vygeneruje \texttt{IntervalsChangedServerEvent} a pošle do Application
 k následnému šíření.
 
 % Client
@@ -71,7 +71,7 @@ Kromě toho že Client je HTTP klientem, musí také být implementován tak, ab
 callback API.
 
 \begin{figure}[tbh]\centering
-\includegraphics[width=140mm, height=140mm]{../diagrams/stm_komunikacni_cyklus.jpg}
+\includegraphics[width=140mm, height=140mm]{../diagrams/stm_komunikacni_cyklus.pdf}
 \caption{Komunikační cyklus}
 \label{stm-komunikacni-cyklus}
 \end{figure}
