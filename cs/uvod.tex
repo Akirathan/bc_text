@@ -1,39 +1,43 @@
 \chapter*{Úvod}
 \addcontentsline{toc}{chapter}{Úvod}
 
-<Popis IoT>
-TODO
+Termín \emph{embedded} zařízení označuje zařízení, které má typicky relativně omezené výpočetní schopnosti,
+zejména ve smyslu výkonnosti procesoru a velikosti paměti.
+Funkcionalita, kterou mohou embedded zařízení mít sahá od té nejjednodušší jako je třeba mikrokontrolér
+v pračce, až po komplexní, jako jsou třeba chytré hodinky.
+S tím přímo souvisí i architektura jejich software.
+Na těch nejjednodušších, do nekonečna vykonávajících jedinou úlohu, běží v cyklu jediný software
+nazývaný v takovém případě \emph{firmware}.
+Na komplexnějších, typicky hardwarově výkonnějších zařízeních už může běžet nějaký vyšší operační systém
+typu Linux nebo Windows, a tedy od klasických desktopových počítačů se příliš neliší.
 
-<Popis embedded systémů>
-Embedded systémy jsou v dnešní době velice rozšířené.
+Další důležitý termín pro tuto práci je \emph{IoT} (Internet of Things), což je označení pro síť,
+která tyto embedded zařízení propojuje.
 
-Firmware je sice přeložen pro STM3210C-Eval desku, nicméně s minimální změnou by
-se dalo použít i jiné zařízení od STM.
+Tato práce se zabývá vývojem firmware pro embedded zařízení spadající do kategorie IoT s tím,
+že toto zařízení komunikuje s centrálním serverem.
 
-Výhoda použití STM3210C-Eval spočívá zejména v tom, že kromě knihoven pro ovládání
-všech periferií poskytuje výrobce také BSP (board support package) obsahující
-knihovny pro ovládání všech komponent obsažených na desce jako je například LCD
-displej.
-Kdybychom použili pouze procesor od STM a zbytek desky si navrhli sami, pravděpodobně
-bychom ušetřili v oblasti hardware, ale museli bychom naprogramovat vlastní BSP.
 
 \section{Cíle práce}
-Cílem práce je vytvořit firmware pro embedded zařízení chovající se jako termostat
-a software pro server umožňující správu tohoto zařízení na dálku.
-
-STM3210C-EVAL je vývojová deska od výrobce STM. Má na sobě mikroprocesor STM32F107VC,
-který patří do rodiny [mikro]procesorů STM32F1.
-
-Zařízení je osazeno mnoha periferiemi, ze kterých pro naše účely využijeme Ethernet,
-dotykový LCD displej, EEPROM, RTC a GPIO.
-
-LCD displej je k procesoru napojen pomocí SPI (Serial peripheral interface).
-Pro naše účely nebudeme využívat dotykovou obrazovku na displeji, a to kvůli nepřesnosti a
-zvýšení složitosti softwarového řešení.
-Zařízení stačí ovládat pomocí joysticku umístěného rovnou pod displejem.
-
-Pomocí GPIO (general purpose input/output) pinů jsou k desce připojeny teplotní sensor
-Dallas(?) DS18B20+ a relé modul.
-Na každém GPIO pinu lze nastavit směr vysílání, frekvenci (25 MHz, 50 MHz) a ???
+Cílem práce je vytvořit firmware pro embedded zařízení chovající se jako termostat a umožňující
+uživateli nastavit teplotu po libovolné časové intervaly přes den a zobrazující aktuálně naměřenou
+teplotu, a software pro webový server umožňující správu tohoto zařízení na dálku.
+Kromě firmware pro embedded zařízení a software pro webový server specifikuje tato práce také
+komunikaci mezi těmito entitami a jejich synchronizaci, při které musíme vzít v úvahu to, že uživatel
+může nastavovat různé hodnoty na embedded zařízení a na webovém serveru ve stejnou dobu.
 
 \section{Struktura práce}
+První kapitola nazvaná "Technologie" představuje všechny technologie, které jsou v rámci celé práce
+použity.
+Patří sem mimo jiné volba konkrétního embedded zařízení.
+
+Dále následují dvě hlavní kapitoly "analýza" a "architektura", kde každá z nich má tři podsekce: "STM",
+"Webový server" a "Komunikace STM se serverem".
+Podsekce STM rozebírá embedded část práce, "Webový server" se zabývá návrhem a implementací webového serveru
+a "Komunikace STM se serverem" se zabývá propojením STM a webového serveru.
+Kapitola analýza nabízí několik možností řešení každé podsekce a vybírá z nich ty nejvhodnější,
+architektura se zabývá konkrétní implementací pro každou podsekci.
+
+Jako další je kapitola "Práce se systémem", která popisuje použití v reálném prostředí, po ní kapitola
+"Vyhodnocení", ve které je popsáno jakým způsobem se testuje funkcionalita celého systému, a nakonec
+je "Závěr".
