@@ -19,6 +19,34 @@ Server podporuje pouze jeden druh zařízení (STM), nicméně je naprogramován
 tak, že pro případné rozšíření na více druhů zařízení nemusíme v programu dělat veliké
 změny.
 
+% Udržování spojení s STM
+\paragraph{Udržování spojení s STM}
+Server potřebuje s STM udržovat spojení, resp. potřebuje vědět, jestli je STM k serveru připojeno,
+nebo jestli je offline.
+Bylo by také vhodné, aby server tento stav dostatečně často aktualizoval a mohl ho tím pádem s malou
+odezvou zobrazit uživateli.
+Kapitola (TODO: ref analýza/komunikace) detailně specifikuje komunikace mezi serverem a STM.
+Pro teď nám vystačí informace, že veškerá komunikace bude probíhat pomocí HTTP zpráv.
+Ta je důležitá pro to, abychom se mohli rozhodnout jakým způsobem na serveru rozhodnout, zda je dané
+STM zařízení offline nebo připojené k serveru.
+
+Možnosti jak udržovat spojení s STM jsou:
+\begin{enumerate}
+  \item Využít vlastnosti "persistent connection" u HTTP/1.1 (TODO: literatura).
+    S využitím této vlastnosti by server mohl STM deklarovat jako offline v momentě, kdy by uzavřel
+    TCP spojení.
+  \item S ohledem na jednoduchost klienta (STM) udržet komunikaci co nejjednodušší tj.
+    na HTTP/1.0 s co nejmenším počtem header options ze strany klienta.
+    V takovém případě je na serveru nutnost zavést něco jako mechanismus časovače, který se obnoví po každé,
+    když přijde libovolná zpráva od daného STM, a v momentě, kdy vyprší, STM je offline.
+  \item STM a server budou udržovat separátní TCP spojení na úplně jiném portu, které
+    by po dobu své životnosti značilo pouze to, že STM je připojeno k serveru.
+    Tato možnost je příliš komplikovaná, zejména kvůli tomu, že každé STM by si se serverem muselo domluvit
+    unikátní port přes který toto nové spojení budou udržovat.
+\end{enumerate}
+
+V rámci dodržení strategie co nejjednoduššího STM je řešení číslo 2 nejvhodnější.
+
 % Použité technologie
 \subsection{Použité technologie}
 
