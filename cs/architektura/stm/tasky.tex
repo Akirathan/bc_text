@@ -57,4 +57,18 @@ na rozumnou periodu.
 Pokud by se totiž měl provádat z mainloop, není jasné jak přesně by měl fungovat, protože čtení
 vstupu od uživatele je samo o sobě blokující funkce.
 
+% SW timer
+\subsubsection{SW timer}
+Některé komponenty firmware musejí být periodicky notifikovány o vypršení určitého časového intervalu.
+V podstatě by takové komponenty využili fungování standardního HW timeru.
+Vzhledem k tomu, že HW timerů je omezeně mnoho a jejich inicializace je pro tyto případy zbytečně složitá,
+hodí se vytvořit SW timery.
+Jejich myšlenka je jednoduchá.
+Z \emph{mainloop} kontrolujeme, jestli nedošlo k jejich vypršení a pokud ano, tak zavoláme jejich
+"timeout" funkci.
+Pomocí funkce \texttt{HAL_GetTick} můžeme získat aktuální počet tiků systému v milisekundách, takže
+implementace SW timeru je skutečně jednoduchá.
+
+Příklad použití SW timeru je \texttt{MainFrame}, který musí periodicky zjišťovat stav síťového
+připojení, aby ho mohl zobrazit uživateli.
 
