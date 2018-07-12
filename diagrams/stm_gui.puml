@@ -1,4 +1,4 @@
-@startuml
+@startuml stm_gui
 
 package Windows {
     class Window <<interface>> {

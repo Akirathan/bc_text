@@ -1,20 +1,28 @@
 
 \subsection{GUI}
 
-V rámci kapitoly analýza/stm/popis_gui (TODO: ref) jsme specifikovali požadavky, které máme na uživatelské
+V rámci kapitoly \ref{popis-gui} jsme specifikovali požadavky, které máme na uživatelské
 rozhraní.
 V této kapitole se detailněji podíváme na implementaci celého GUI.
 
-% TODO: obrázek stm_gui.puml
+\begin{figure}[tbh!]\centering
+\includegraphics[scale=0.75]{../diagrams/stm_gui.pdf}
+\caption{Hierarchie základních tříd v GUI}
+\label{fig:stm-gui}
+\end{figure}
 
-Obrázek (TODO: ref) zobrazuje hierarchii základních tříd a vztahy mezi nimi.
+Obrázek \ref{fig:stm-gui} zobrazuje hierarchii základních tříd a vztahy mezi nimi.
+Pro jednoduchost zobrazuje pouze pár konkrétních tříd jako příklad: \texttt{TextWindow} jako statické
+okno, které pouze zobrazuje text a \texttt{HexCharWindow} jako kontrolní okno, které je součástí
+\texttt{KeyFrame} a zobrazuje právě jeden hexadecimální znak, jehož hodnotu může uživatel
+zvětšovat či změnšovat.
 Celé GUI je tvořeno dvěma základními druhy objektů - \emph{windows} a \emph{frames}.
 Každý frame reprezentuje jednu obrazovku tj. co všechno je v daný moment zobrazeno na displeji.
 Windows jsou velice jednoduchá okna - typicky zobrazující pouze neohraničený text resp. číselnou
 hodnotu.
 Frame obsahuje několik oken a definuje, kde přesně mají tato okna být zobrazena a jakého typu
 mají být.
-Každý frame má svůj \textttt{WindowSystem}, přes který může sám do sebe vkládat okna.
+Každý frame má svůj \texttt{WindowSystem}, přes který může sám do sebe vkládat okna.
 Kromě toho, že WindowSystem zpracovává vstup, na základě kterého přepíná mezi jednotlivými okny,
 funguje také jako prostředník mezi frame a jeho okny.
 
@@ -77,7 +85,7 @@ strukturu callback metod na příkladě s obrázkem.
 Diagram (TODO: reference) ilustruje situaci, kdy je uživatel v \texttt{OverviewIntervalFrame}, stiskne
 tlačítko "exit" a dostane se zpět do \texttt{MainFrame}.
 Proces na diagramu je následující:
-\begin*{itemize}
+\begin{enumerate}
   \item Vygenerování interruptu časovačem
   \item Zavolání metody \texttt{IO::task}, ve které dojde k vytvoření callback objektu s parametrem.
   \item Zavolání metody \texttt{WindowSystem::inputCallback}, která tento callback předá aktuálně
@@ -86,7 +94,7 @@ Proces na diagramu je následující:
   \item Zavolání metody \texttt{OverviewIntervalFrame::exitMessageCallback}
   \item Zavolání metody \texttt{MainFrame::frameTerminateCallback}, ve které MainFrame určí který
     frame zkončil (TODO hrubka?) a nastaví sám sebe jako aktuální frame.
-\end{itemize}
+\end{enumerate}
 
 
 % přístup k oknům z interrupt handleru/mainloopu --> nutnost zamykání

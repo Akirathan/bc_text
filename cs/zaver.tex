@@ -1,2 +1,43 @@
 \chapter*{Závěr}
 \addcontentsline{toc}{chapter}{Závěr}
+
+Cíle práce se dají rozdělit do tří částí: embedded část práce, web-server část práce a nakonec
+komunikace mezi webový serverem a embedded zařízením.
+Dále shrneme jakým způsobem jsme dosáhli cíle v rámci jednotlivých částí.
+
+\paragraph{Embedded část práce}
+V rámci této části práce jsme měli za cíl vytvořit firmware umožňující uživateli nastavovat
+různé teploty po různé časové úseky během dne a zároveň zobrazovat aktuálně naměřenou teplotu.
+Jako embedded zařízení jsme zvolili STM3210C-Eval board a firmware vytvořili pomocí knihoven
+od STM tak, aby byl přenositelný na de-facto libovolné STM32 zařízení.
+Vzhledem k náročnosti programování v embedded prostředí jsme zvolili strategii udržet firmware
+co nejjednodušší.
+Specifikovali jsme několik různých obrazovek, které může STM3210C-Eval board zobrazovat na svém
+displeji a díky kterým může uživatel nastavit jednotlivé intervaly, vidět aktuálně naměřenou teplotu a
+připojit zařízení k serveru.
+
+\paragraph{Část práce zabývající se webovým serverem}
+Vzhledem k povaze embedded zařízení a požadavku na co nejjednodušší firmware, jsme se rozhodli
+implementovat webový server jako separátní entitu.
+Přestože námi implementovaný webový server nemá příliš rozsáhlou funkcionalitu, mohl by do budoucna
+být rozšířen o spoustu dalších vlastností.
+
+\paragraph{Komunikace mezi serverem a embedded zařízením}
+V rámci této části práce jsme rozebrali několik možností, jak by šla komunikace mezi webový serverem
+a embedded zařízením realizovat.
+Nakonec jsme se rozhodli pro implementaci komunikace pouze pomocí HTTP.
+Specifikace komunikace by mohla být snadno rozšířena o několik dalších položek, aniž by se měnil její
+princip.
+Dále jsme rozebrali možnosti jak komunikaci zabezpečit a to jak ve smyslu autentizace STM na serveru,
+tak ve smyslu "skrytí" obsahu komunikace pomocí šifrování.
+
+
+% shrnutí
+\paragraph{Shrnutí}
+Přestože v rámci této práce podporujeme "pouze" STM32 zařízení, které serveru posílá pouze naměřenou
+teplotu a vyměňuje si s ním nastavení časových intervalů, do specifikace komunikace by se poměrně
+snadno daly zařadit i další položky jako je například vlhkost vzduchu.
+Dodejme, že pro podporu jiných embedded zařízení by bylo potřeba přeprogramovat hardware-specifickou
+část firmware, nicméně na serveru by přidání podpory pro nový typ zařízení nebylo složité.
+
+% použití RTOS a GUI knihovny

@@ -3,9 +3,9 @@
 
 Webový server je rozdělený do dvou na sobě nezávislých komponent \texttt{user\_interface} a
 \texttt{stm\_communication} tak, jak je to znázorněno na obrázku (TODO: ref).
-user_interface zprostředkovává veškerou komunikaci mezi uživatelem (klientem) a jeho STM
+\texttt{user\_interface} zprostředkovává veškerou komunikaci mezi uživatelem (klientem) a jeho STM
 zařízeními sestávající z nastavování intevalů a čtení aktuálně naměřené teploty.
-stm_communication přijímá aktuálně naměřenou teplotu od STM zařízení a vyměňuje si s nimi intervaly.
+\texttt{stm\_communication} přijímá aktuálně naměřenou teplotu od STM zařízení a vyměňuje si s nimi intervaly.
 Obě komponenty čtou a zapisují data do společné databáze.
 Tím je nepřímo zajištěna komunikace mezi uživatelem a jeho zařízením skrz server.
 
@@ -23,9 +23,13 @@ k dispozici velikou abstrakci, máme zjednodušenou práci.
 % Databázové schéma
 \subsection{Databázové schéma}
 
-% TODO: obrázek databázového schématu
+\begin{figure}[tbh]\centering
+\includegraphics[scale=0.8]{../diagrams/databazove_schema.pdf}
+\caption{Databázové schéma}
+\label{databazove-schema}
+\end{figure}
 
-Databázové schéma (TODO: ref) ukazuje základní objekty a vztahy mezi nimi.
+Databázové schéma \ref{databazove-schema} ukazuje základní objekty a vztahy mezi nimi.
 
 Na server se může registrovat libovolný uživatel zadáním uživatelského jména, hesla a potvrzením
 emailové adresy.
