@@ -6,7 +6,7 @@ Tato kapitola se zabývá technologiemi, které máme v rámci naší práce k d
 Koncovým zařízením máme na mysli samotný termostat, který měří teplotu u uživatele doma.
 % high-level pohled: embedded / linux
 Zařízení má poměrně jednoduchou úlohu - má pouze měřit teplotu, umožnit uživateli nastavit teplotu po
-různé časové intervlz a to všechno periodicky posílat na server.
+různé časové intervly a to všechno periodicky posílat na server.
 K vykonání takto jednoduché úlohy nepotřebujeme příliš paměti, ani výkonný procesor.
 Bohatě nám vystačí zhruba 256 KB paměti pro kód a 64 KB RAM paměti.
 Po zařízení také požadujeme, aby nebylo příliš drahé a tím pádem neobsahovalo zbytečně výkonný
@@ -18,8 +18,8 @@ Kdybychom totiž použili zařízení typu Raspberry Pi, mohli bychom do něj, d
 výkonnému hardware, nahrát operační systém Linux a tím pádem bychom měli k dispozici nejen
 abstrakci nad hardware, ale také v podstatě libovolnou technologii, kterou bychom mohli použít
 při programování našeho software.
-Jediné co by mohlo být problematické s použitím Linuxu je komunikace s externími hardwarovými (?)
-komponentami.
+Jediné co by mohlo být problematické s použitím Linuxu je komunikace s externími komponentami, tj.
+teplotním sensorem a relé.
 
 
 % Požadované IO koncového zařízení
@@ -45,7 +45,7 @@ množství periferií které nevyužijeme - například CAN, Motor control, SD k
 \subsubsection{Externí komponenty}
 \paragraph{Teplotní senzor}
 Dále potřebujeme dostatečně přesný a zároveň levný teplotní senzor.
-K tomu účelu nám vystačí DS18B20, který můžeme k téměř jakémukoli zařízení připojit pomocí tří
+K tomu účelu nám vystačí DS18B20 (TODO: citet), který můžeme k téměř jakémukoli zařízení připojit pomocí tří
 GPIO konektorů - napájení, uzemnění a data.
 Jedna z výhod teplotního senzoru DS18B20 je ta, že sám provádí převod z analogové naměřené
 teploty na digitální data.
@@ -53,8 +53,8 @@ Při maximální přesnosti měření na čtyři desetinná místa stupňů cels
 750 ms.
 
 % relé modul
-\paragraph{Relé modul}
-Jako poslední potřebujeme relé modul, který nám umožní spouštět připojený kotel.
+\paragraph{Relé}
+Jako poslední potřebujeme relé, které nám umožní spouštět připojený kotel.
 
 
 % Server
@@ -62,7 +62,7 @@ Jako poslední potřebujeme relé modul, který nám umožní spouštět připoj
 % Požadavky
 Na webový server máme následující požadavky:
 \begin{itemize}
-  \item Podpora více zařízení pro jednoho uživatele.
+  \item Podpora více STM zařízení pro jednoho uživatele.
   \item Zobrazování naměřené teploty a nastavených intervalů každého zařízení.
   \item Možnost přenastavit intervaly.
 \end{itemize}

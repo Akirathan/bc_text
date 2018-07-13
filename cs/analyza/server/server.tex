@@ -16,8 +16,7 @@ Uživatel může odkudkoli, kde má připojení k internetu, zkontrolovat činno
 a případně ho přenastavit.
 
 Server podporuje pouze jeden druh zařízení (STM), nicméně je naprogramován
-tak, že pro případné rozšíření na více druhů zařízení nemusíme v programu dělat veliké
-změny.
+tak, že pro případné rozšíření na více druhů zařízení nemusíme v jeho softwaru dělat veliké změny.
 
 % Udržování spojení s STM
 \paragraph{Udržování spojení s STM}
@@ -25,17 +24,17 @@ Server potřebuje s STM udržovat spojení, resp. potřebuje vědět, jestli je 
 nebo jestli je offline.
 Bylo by také vhodné, aby server tento stav dostatečně často aktualizoval a mohl ho tím pádem s malou
 odezvou zobrazit uživateli.
-Kapitola (TODO: ref analýza/komunikace) detailně specifikuje komunikace mezi serverem a STM.
+Kapitola \ref{analyza-komunikace} detailně specifikuje komunikaci mezi serverem a STM.
 Pro teď nám vystačí informace, že veškerá komunikace bude probíhat pomocí HTTP zpráv.
 Ta je důležitá pro to, abychom se mohli rozhodnout jakým způsobem na serveru rozhodnout, zda je dané
 STM zařízení offline nebo připojené k serveru.
 
 Možnosti jak udržovat spojení s STM jsou:
 \begin{enumerate}
-  \item Využít vlastnosti "persistent connection" u HTTP/1.1 (TODO: literatura).
+  \item Využít vlastnosti \emph{persistent connection} u HTTP/1.1 (TODO: citet RFC).
     S využitím této vlastnosti by server mohl STM deklarovat jako offline v momentě, kdy by uzavřel
     TCP spojení.
-  \item S ohledem na jednoduchost klienta (STM) udržet komunikaci co nejjednodušší tj.
+  \item S ohledem na jednoduchost klienta (STM), udržet komunikaci co nejjednodušší tj.
     na HTTP/1.0 s co nejmenším počtem header options ze strany klienta.
     V takovém případě je na serveru nutnost zavést něco jako mechanismus časovače, který se obnoví po každé,
     když přijde libovolná zpráva od daného STM, a v momentě, kdy vyprší, STM je offline.
@@ -45,7 +44,7 @@ Možnosti jak udržovat spojení s STM jsou:
     unikátní port přes který toto nové spojení budou udržovat.
 \end{enumerate}
 
-V rámci dodržení strategie co nejjednoduššího STM je řešení číslo 2 nejvhodnější.
+V rámci dodržení strategie co nejjednoduššího firmwaru STM je řešení číslo 2 nejvhodnější.
 
 % Použité technologie
 \subsection{Použité technologie}
@@ -71,7 +70,7 @@ Existuje mnoho různých backend frameworků.
 Jsou to například NodeJS napsaný v Javascriptu, Ruby on Rails napsaný v Ruby, Django napsaný v Pythonu a
 Laravel napsaný v PHP. % TODO: formátovat jednotlivé názvy, případně přidat reference
 Všechny tyto frameworky nám mohou usnadnit práci podobným způsobem, pro naši aplikaci se liší především
-tím jaký programovací jazyk používají.
+tím, jaký programovací jazyk používají.
 
 % Výběr Djanga
 Vzhledem k tomu, že pro naši aplikaci je pro výběr konkretního frameworku relevantní pouze to, jaký programovací
@@ -79,13 +78,13 @@ jazyk používá, a vzhledem k tomu, že autor má předchozí zkušenosti s Pyt
 
 \subsubsection{Frontend}
 % Bootstrap
-Vytváření vzhledu webu si usnadníme použitím knihovny Bootstrap.
+Vytváření vzhledu webu si usnadníme použitím knihovny Bootstrap. % TODO: cite
 Ta nám umožňuje snadno vytvořit moderně vypadající responsive webovou aplikaci. % TODO: co znamená responsive?
 
 % interaktivní device stránka
 Pro větší přehlednost požadujeme, aby se uživateli všechny jeho STM zobrazily na jednu stránku,
 která bude alespoň trochu interaktivní.
-Bylo by proto vhodné použít nějaký frontend framework, například ReactJS nebo AngularJS.
+Bylo by proto vhodné použít nějaký frontend framework, například ReactJS nebo AngularJS. % TODO: cite
 Integrace některého z těchto frontend frameworků do Djanga je ale příliš komplikovaná a náš web
 příliš malý pro to, aby se jejich použití vyplatilo.
 Proto budeme frontend vyvíjet pouze s pomocí Bootstrap a jQuerry.

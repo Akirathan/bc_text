@@ -1,26 +1,28 @@
 
 \subsection{Použité periferie}
 V této části textu vypíšeme periferie na STM (tedy na desce STM3210C-Eval board), které jsou
-pro naši aplikaci nejdůležitější a stručně popíšeme její fungování.
-Nemá smysl zde opisovat technické detaily z referenčního manuálu \citet{ReferenceManual}
+pro naši aplikaci nejdůležitější a stručně popíšeme jejich fungování.
+Nemá smysl zde opisovat technické detaily z referenčního manuálu \citet{ReferenceManual}.
 
 % EEPROM
 \subsubsection{EEPROM}
 EEPROM je 64 KB persistentní uložiště dat na I2C sběrnici.
 Uložit do něj můžeme de-facto cokoli a kdykoli v libovolném formátu.
-V našem případě do této paměti budeme ukládat nastavení teplotních intervalů a privátní klíč.
+V našem případě do této paměti budeme ukládat nastavení teplotních intervalů a privátní klíč
+určený k šifrování komunikace se serverem.
 
-% Časovače
-\subsubsection{Časovače}
+% Timery
+\subsubsection{Timery}
+% TODO: footnote: Vzhledem k zavedeném anglickému pojmu "timer" budeme použ...
 Na STM je několik časovačů různých typů lišících se podle toho co všechno podporují.
 Velice zjednodušeně se na časovač dá dívat jako na komponentu, která má tři základní
 16-bitové registry: prescaler, counter a auto-reload.
-Prescaler dělí frekvenci časovače tj. jak rychle časovač zvyšuje counter.
+Prescaler dělí frekvenci časovače a tím ovlivňuje rychlost zvyšování counteru.
 Counter registr se zvyšuje nebo snižuje o jedna každý tik časovače.
 Perioda časovače vyprší tehdy, když counter registr přeteče resp. podteče hodnotu
-z auto-reload registru - podle toho, jestli je časovač nastavený aby counter zvyšoval nebo snižoval.
-Časovač se dá nastavit tak, aby při vypršení své periody vygeneroval \emph{Update event} přerušení,
-které se nám bude hodit při spouštění různých tasků (tasky deklarujeme jako handlery tohoto přerušení).
+z auto-reload registru - podle toho, jestli je časovač nastavený tak, aby counter zvyšoval nebo snižoval.
+Časovač se dá nastavit tak, aby při vypršení své periody vygeneroval \emph{Update event} interrupt,
+který se nám bude hodit při spouštění různých tasků (tasky deklarujeme jako handlery tohoto přerušení).
 
 % RTC
 \subsubsection{RTC}
@@ -30,12 +32,7 @@ Od ostatních časovačů se odlišuje tím, že se na něm dá snadno nastavit 
 s délkou jedné sekundy a že je schopen provozu i pokud je napájen pouze z
 baterie.
 
-Jako zdroj hodinového signálu může mít HSE, LSE nebo LSI oscilátory.
-V našem případě je nejvhodnější zvolit jako zdroj hodinového signálu LSI oscilátor,
-protože díky němu můžeme snadno nastavit RTC tak, aby svůj čítač zvyšovalo
-každou sekundu.
-
-RTC má 32-bitový čítač, do kterého můžeme zapsat libovolný čas a později z
+RTC má 32-bitový counter registr, do kterého můžeme zapsat libovolný čas a později z
 něj číst aktuální čas.
 
 % Second interrupt
@@ -45,7 +42,7 @@ přerušení (second interrupt).
 V naší aplikaci je sekundové přerušení žádoucí.
 
 % Alarm, probuzení ze stand-by režimu
-Další důležitá vlastnost RTC je, že je schopné probudit desku ze stand-by režimu
+Další důležitá vlastnost RTC je, že je schopné probudit desku ze stand-by režimu.
 RTC je tedy schopné provozu i pokud je napájené pouze z baterie, respektive
 zvyšuje pouze čítač a porovnává s přednastavenou hodnotou alarmu, a pokud je
 čítač vyšší nebo stejný, probudí desku.
@@ -57,8 +54,9 @@ tuto vlastnost RTC tedy nevyužíváme.
 % jak budeme RTC používat
 \paragraph{Použití}
 V naší aplikaci používáme pro synchronizaci času se serverem \emph{Unix timestamp}.
-Vzhledem k tomu, že do RTC čítače můžeme kdykoli zapsat, můžeme do něj zapsat tento timestamp, který
-získáme ze serveru a RTC bude čítač každou sekundu zvyšovat.
+% TODO: footnote: definice Unix timestamp / odkaz na definici (citace)
+Vzhledem k tomu, že do RTC counter registru můžeme kdykoli zapsat, můžeme do něj zapsat tento timestamp, který
+získáme ze serveru a RTC bude counter registr každou sekundu zvyšovat.
 Tímto jednoduchým způsobem umožníme synchronizaci času na serveru a na STM.
 
 % GPIO
@@ -66,13 +64,14 @@ Tímto jednoduchým způsobem umožníme synchronizaci času na serveru a na STM
 Na STM desce je celkem 100 GPIO pinů.
 Každý z těchto pinů se dá nastavit jako vstupní nebo výstupní, navíc má k sobě interně připojený
 rezistor.
-Pro teplotní senzor budeme využít 3 GPIO piny - napájení, uzemnění a datový pin.
-Komunikace s teplotním senzorem je specifikována \emph{one wire} protokolem a vyžaduje, aby na
+Na teplotní senzor využijeme 3 GPIO piny - napájení, uzemnění a datový pin.
+Komunikace s teplotním senzorem je specifikována \emph{One wire} protokolem a vyžaduje, aby na
+% TODO: citet one-wire-protokol
 datovém pinu byl připojený pull-up rezistor.
-Tento datový pin stačí přepínat z režimu "input pull-up" tj. vstupní režim s připojeným pull-up
-rezistorem, do režimu "output push-pull" tj. výstupní režim bez připojeného rezistoru.
+Tento datový pin stačí přepínat z režimu \uv{input pull-up} tj. vstupní režim s připojeným pull-up
+rezistorem, do režimu \uv{output push-pull} tj. výstupní režim bez připojeného rezistoru.
 
 % Ethernet
 \subsubsection{Ethernet}
-Vzhledem k veliké složitosti této periferie ji zde nebudeme popisovat a pouze řekneme, že ji
+Vzhledem k veliké složitosti této periferie ji zde nebudeme vůbec popisovat a pouze řekneme, že ji
 budeme používat.

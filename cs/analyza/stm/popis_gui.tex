@@ -1,6 +1,7 @@
 
 \subsection{Popis GUI} \label{popis-gui}
-V této kapitole se budeme zabývat za jakých okolností se spustí jaké obrazovky.
+V této kapitole specifikujeme výstup STM tj. popíšeme co všechno a za jakých okolností
+bude zobrazeno na displeji v daný moment.
 
 % Stavy vzhledem ke GUI.
 Nejprve specifikujeme v jakých stavech se STM může nacházet.
@@ -11,38 +12,39 @@ Rozhodně se nejedná o souhrn všech možný stavů.
 \begin{itemize}
   \item Ethernetová periferie je korektně inicializována a kabel je připojen. Zkráceně budeme
         značit \texttt{ETH-up}.
-  \item Ethernetový kabel je buď odpojen nebo Ethernetová periferie se z nějakého důvodu
+  \item Ethernetový kabel je buď odpojen nebo ethernetová periferie se z nějakého důvodu
         neinicializovala. Zkráceně budeme značit jako \texttt{ETH-down}.
   \item STM je připojeno k serveru. Zkráceně značíme \texttt{CONNECTED}.
   \item STM je odpojeno od serveru. Zkráceně značíme \texttt{DISCONNECTED}.
-  \item STM se připojuje k serveru, s tím že je nastavený (TODO) nějaký timeout. Zkráceně značíme
-        \texttt{CONNECTING}.
+  \item STM se připojuje k serveru. Zkráceně značíme \texttt{CONNECTING}.
   \item V EEPROM nejsou uložena žádná konfigurační data intervalů. Tento stav nastává pouze v případě,
         kdy uživatel zapne STM poprvé.
   \item V EEPROM jsou uložena konfigurační data intervalů.
-  \item Uživatel už zadal klíč (viz ...) do STM. Tento klíč se ukládá do EEPROM, aby ho uživatel
+  \item Uživatel už zadal klíč do STM. Tento klíč se ukládá do EEPROM, aby ho uživatel
         nemusel zadávat opakovaně.
   \item Uživatel ještě klíč nezadal. To znamená, že se ještě nepokoušel připojit k serveru.
 \end{itemize}
 
 % Invarianty - co chceme aby v rámci GUI platilo.
 \subsubsection{Invarianty}
-ETH-up a ETH-down se může v podstatě libovolně střídat v běhu aplikace a chceme o tom uživateli
-dát vědět.
-Pokud se za běhu aplikaceme dostaneme do stavu \texttt{ETH-up}, dáme uživateli možnost připojit
-se k serveru.
-Pokud jsme ve stavu \texttt{CONNECTED}, nemůžeme se odpojit. Jedině pokud resetujeme celé STM.
-Pokud STM vůbec není připojeno k internetu a EEPROM je prázdná, dáme uživateli možnost nastavit
-intervaly.
+\begin{itemize}
+  \item Odpojení resp. zapojení ethernetového kabelu když je STM zapnuté by nemělo způsobit žádnou chybu, což
+    znamená, že stavy \texttt{ETH-up} a \texttt{ETH-down} se mohou libovolně střídat.
+  \item Pokud se STM dostane do stavu \texttt{ETH-up}, dá uživateli možnost připojit se k serveru.
+  \item Pokud je STM ve stavu \texttt{CONNECTED}, nemůže se od serveru odpojit.
+    Jediná možnost jak STM odpojit od serveru je buď ho resetovat nebo odpojit ethernetový kabel.
+  \item Pokud STM vůbec není připojeno k internetu a EEPROM je prázdná, umožní STM uživateli nastavit
+    intervaly.
+\end{itemize}
 
-% Popis přepínání mezi obrazovkami
+% Popis jednotlivých obrazovek
 \subsubsection{Popis jednotlivých obrazovek}
 
 % Vyjmenování GUI prvků, které budeme potřebovat
 V rámci celého GUI nám stačí tyto grafické prvky:
 \begin{itemize}
-  \item Tlačítka, pomocí kterých budeme chtít potvrzovat data zadaná do jednotlivých obrazovek
-    a přepínat tím na další obrazovky.
+  \item Tlačítka, pomocí kterých uživatel buď potvrdí zadaná data, nebo je zahodí.
+    Kromě toho tlačítka ještě umožňují přepínání mezi jednotlivými obrazovkami.
   \item Okna s nastavitelnou hodnotou kde hodnota může být například čas v minutách, nebo teplota.
     Uživatel může hodnotu nastavit pomocí joysticku.
   \item Okna, která slouží pouze pro zobrazování nějaké hodnoty - například aktuálního času, nebo
@@ -61,18 +63,21 @@ Pohybem joysticku do stran přepínáme mezi jednotlivými nakliknutelnými prvk
 Pohybem joysticku nahoru a dolu měníme hodnoty právě nakliknutých prvků, pokud to jde.
 Nakliknutý prvek na displeji STM poznáme podle červeného zabarvení.
 
+Jednotlivé obrazovky jsou pojmenovány podle názvů tříd (v C++), které je reprezentují a jsou zmíněny
+v kapitole architektura.
+
 % ClkFrame
 \paragraph{ClkFrame}
-% TODO: footnote - názvy jednotlivých obrazovek odpovídají názvům tříd, které jsou zmíněné v kapitole
-%   architektura.
 \begin{figure}[H]\centering
 \includegraphics[width=140mm, height=140mm]{../img/clk_frame.jpg}
 \caption{ClkFrame - nastavení času}
 \label{clk-frame}
 \end{figure}
 
-Tato obrazovka je zobrazena po startu STM v momentě, kdy Ethernetová periferie není inicializována a
-STM se tedy nemůže připojit k serveru aby rovnou synchronizovalo čas.
+Tato obrazovka je zobrazena po startu STM v momentě, kdy ethernetová periferie není inicializována a
+STM se tedy nemůže připojit k serveru aby mohlo rovnou synchronizovat čas se serverem.
+Uživatel musí nastavit nějaký čas (není nutné aby odpovídal reálnému času), aby STM vědělo, který
+interval je aktuální a tedy jakou teplotu má udržovat.
 
 % SetIntervalFrame
 \paragraph{SetIntervalFrame}
@@ -84,22 +89,22 @@ STM se tedy nemůže připojit k serveru aby rovnou synchronizovalo čas.
 
 Tato obrazovka umožňuje uživateli nastavit časové intervaly s teplotou.
 Obrazovka zobrazuje nastavení pro právě jeden interval, pokud uživatel stiskne tlačítko
-"Next", zobrazí se nastavení dalšího intervalu, pokud stiskne tlačítko "End", nastavování
+\uv{Next}, zobrazí se nastavení dalšího intervalu, pokud stiskne tlačítko \uv{End}, nastavování
 intervalů se ukončí a všechny nastavené intervaly jsou uloženy do EEPROM.
 
 Zobrazena je v těchto případech:
 \begin{itemize}
   \item když EEPROM neobsahuje žádné nastavení intervalů což nastává v případě kdy uživatel
     ještě žádné intervaly nenastavoval - tedy po prvním spuštění STM.
-  \item Když uživatel zmáčkne v obrazovce \texttt{MainFrame} čudlík "reset intervals".
+  \item Když uživatel zmáčkne v obrazovce \texttt{MainFrame} čudlík \uv{reset intervals}.
 \end{itemize}
 
 % OverviewIntervalFrame
 \paragraph{OverviewIntervalFrame}
-OverviewIntervalFrame neboli "přehled všech nastavených intervalů" vypadá stejně jako SetIntervalFrame
-až na to, že intervaly nejdou nastavovat, pouze prohlížet.
-Tlačítkem "Next" se můžeme proklikat postupně přes všechny intervaly a tlačítkem "End" zobrazování
-ukončit.
+\texttt{OverviewIntervalFrame} neboli \uv{přehled všech nastavených intervalů} vypadá stejně
+jako \texttt{SetIntervalFrame} až na to, že intervaly nejdou nastavovat, pouze prohlížet.
+Tlačítkem \uv{Next} se uživatel prokliká postupně přes všechny intervaly a tlačítkem \uv{End} zobrazování
+ukončí.
 
 % ConnectFrame
 \paragraph{ConnectFrame}
@@ -109,7 +114,7 @@ ukončit.
 \label{connect-frame}
 \end{figure}
 
-Tato obrazovka je zobrazena ihned po spuštění STM v momentě, kdy Ethernetová periferie je inicializována
+Tato obrazovka je zobrazena ihned po spuštění STM v momentě, kdy ethernetová periferie je inicializována
 a klíč ještě není uložen v EEPROM.
 V takovém případě se STM může ihned připojit k serveru a nemusíme uživatele zdržovat s nastavováním
 času.
@@ -122,29 +127,29 @@ V takovém případě se STM může ihned připojit k serveru a nemusíme uživa
 \label{key-frame}
 \end{figure}
 
-Do této obrazovky uživatel musí zadat 8-bytový DES klíč vygenerovaný na serveru.
-Po stisknutí tlačítka "Submit" se STM pokusí přihlásit na server.
+Do této obrazovky uživatel zadá 8-bytový DES klíč vygenerovaný na serveru.
+Po stisknutí tlačítka \uv{Submit} se STM pokusí přihlásit na server.
 
 % MainFrame
 \paragraph{MainFrame}
 \begin{figure}[H]\centering
-\includegraphics[width=140mm, height=140mm]{..//img/main_frame_online.jpg}
+\includegraphics[width=140mm, height=140mm]{../img/main_frame_online.jpg}
 \caption{MainFrame - hlavní obrazovka}
 \label{main-frame}
 \end{figure}
 
 MainFrame reprezentuje hlavní obrazovku.
 Jsou zde zobrazeny zásadní hodnoty - aktuálně naměřená teplota (actual temp), přednastavená teplota
-(set temp), stav připojení k serveru.
+(set temp) a stav připojení k serveru.
 % tlačítko connect
-Pokud je stav \texttt{DISCONNECTED} a zároveň \texttt{ETH-up}, objeví se v MainFrame tlačítko "connect",
-pomocí kterého se uživatel dostane na obrazovku KeyFrame, kam může zadat klíč vygenerovaný serverem a
-připojit se tak na server.
-V případě kdy je klíč uložen v EEPROM, tak se STM, po stisku tlačítka "connect" rovnou připojí k serveru
+Pokud je STM ve stavu \texttt{DISCONNECTED} a zároveň \texttt{ETH-up}, zobrazí v \texttt{MainFrame}
+tlačítko \uv{connect}, pomocí kterého se uživatel dostane na obrazovku \texttt{KeyFrame}, do které zadá klíč
+vygenerovaný serverem a připojí se tak k serveru.
+V případě kdy je klíč uložen v EEPROM, tak se STM po stisku tlačítka \uv{connect} rovnou připojí k serveru
 a pouze zobrazí stav \texttt{CONNECTING}.
 
-Uživatel se z MainFrame také může dostat do SetIntervalFrame pomocí "reset intervals" tlačítka a do
-OverviewIntervalFrame pomocí "overview intervals" tlačítka.
+Uživatel se z \texttt{MainFrame} také může dostat do \texttt{SetIntervalFrame} pomocí \uv{reset intervals}
+tlačítka a do \texttt{OverviewIntervalFrame} pomocí \uv{overview intervals} tlačítka.
 
 %%%%%%%%%%%%%%%
 % Frame diagram
@@ -156,4 +161,14 @@ OverviewIntervalFrame pomocí "overview intervals" tlačítka.
 \caption{Diagram přepínání obrazovek}
 \label{frame-diagram}
 \end{figure}
+
+Diagram \ref{frame-diagram} je v podstatě orientovaný graf s počátečním uzlem \texttt{board\_init}
+a koncovým uzlem \texttt{MainFrame}.
+\texttt{ClkFrame} a \texttt{SetIntervalFrame} představují konfigurační obrazovky, které se postupně
+zobrazí v případě kdy je STM offline nebo je spuštěno poprvé.
+Po zadání konfigurace, je-li to nutné, se uživatel nakonec dostane do \texttt{MainFrame}, ze kterého
+už může prohlížet jednotlivé intervaly v \texttt{OverviewIntervalFrame}, případně všechny intervaly
+přenastavit v \texttt{SetIntervalFrame}.
+Dále se z \texttt{MainFrame} může uživatel ještě dostat do \texttt{KeyFrame}, pokud se chce připojit
+k serveru a klíč ještě není uložen v EEPROM.
 
