@@ -1,16 +1,18 @@
 \subsection{Specifikace HTTP zpráv}
 
-Tato sekce probírá detaily HTTP komunikace mezi STM a webovým serverem.
+Tato sekce popisuje obsah jednotlivých HTTP zpráv mezi STM a serverem.
+Pro jednoduchost zde nejsou téměř vůbec uvedeny obsahy hlaviček.
+Důležité jsou zejména URL requestů a těla zpráv, kde konkrétní URL jsou z ilustrativních důvodů
+zjednodušeny.
+Těla zpráv jsou ještě navíc šifrována ale pro jednoduchost jsou všechny zprávy zobrazeny tak,
+jak by vypadaly bez použití jakéhokoli šifrování.
 
 % Connection fáze
 \subsubsection{Fáze připojování}
 Nejprve je potřeba vyřešit připojení STM k serveru.
-Chceme totiž uživateli dát vědět zda je STM k serveru připojené a uživatel může tím pádem
-sledovat aktuálně naměřené hodnoty přes web.
 
-Můžeme poslat požadavek typu:
 \begin{packetstm}
-POST /controllers/connect
+POST /connect
 Content-Type: text/plain
 
 <device_id>
@@ -18,13 +20,13 @@ Content-Type: text/plain
 
 \begin{packetserver}
 HTTP/1.1 200 OK
-[options]
+Content-Type: text/plain
 
 <server_real_time>
 \end{packetserver}
 
 \texttt{server\_real\_time} je timestamp odeslaný serverem sloužící k synchronizaci času
-mezi STM a serverem (odkaz).
+mezi STM a serverem.
 
 % Posílání naměřené teploty
 \subsubsection{Odesílání naměřené teploty}
@@ -36,7 +38,7 @@ Content-Type: text/plain
 <temp_float>
 \end{packetstm}
 
-Kde \texttt{temp\_timestamp} je \texttt{timestamp} značící kdy byla teplota naměřena a
+Kde \texttt{temp\_timestamp} je timestamp značící kdy byla teplota naměřena a
 \texttt{temp\_float} je teplota v desetinné přesnosti.
 
 % Výměna intervalů
@@ -47,23 +49,26 @@ GET /config/intervals/timestamp
 
 \begin{packetserver}
 HTTP/1.1 200 OK
-[options]
+Content-Type: text/plain
 
 <interval_timestamp>
 \end{packetserver}
 
-STM porovná přijatý \texttt{interval\_timestamp} se svým \texttt{timestampem} a pokud má novější nastavení než server,
-tak je odešle:
+\texttt{interval\_timestamp} je timestamp intervalů na serveru.
+STM porovná přijatý \texttt{interval\_timestamp} s timestampem svých intervalů a pokud má novější nastavení
+než server, tak je odešle:
 % odesílání intervalů
 \begin{packetstm}
 POST /config/intervals
 Content-Type: application/octet-stream
 
-<intervals_timestamp>
-<intervals>
+<intervals_timestamp><intervals>
 \end{packetstm}
 
-pokud má starší nastavení než server, tak si je od serveru vyžádá:
+Na rozdíl od odstatních zpráv je zde \texttt{intervals\_timestamp} v binárních podobě jako 4 bajtové
+neznaménkové číslo, formát \texttt{intervals} bude zmíněn později.
+
+Pokud má starší intervaly než server, tak si je od serveru vyžádá:
 % přijímání intervalů
 \begin{packetstm}
 GET /config/intervals
@@ -72,13 +77,13 @@ GET /config/intervals
 \begin{packetserver}
 HTTP/1.1 200 OK
 Content-Type: application/octet-stream
-[options]
 
 <intervals>
 \end{packetserver}
 
 \paragraph{Formát intervalů}
-je následující (stejný jako formát, ve kterém si samo STM intervaly ukládá do své EEPROM)
+Formát intervalů je stejný jako formát, ve kterém si samo STM intervaly ukládá do své EEPROM a
+má následující podobu:
 \texttt{<from>} \texttt{<to>} \texttt{<temp>}, kde \texttt{from} a \texttt{to} jsou
-časy v sekundách v rámci dne a \texttt{temp} je teplota.
+časy v minutách v rámci dne a \texttt{temp} je teplota.
 Každá položka reprezentuje 4 bajtové neznaménkové číslo.

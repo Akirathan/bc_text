@@ -1,7 +1,7 @@
 % Metadata k uložení do PDF, podrobnější popis viz dokumentace balíčku pdfx.
 
-\Author{Jméno Příjmení}
-\Title{Název práce}
-\Keywords{klíčová slova\sep další taková\sep ještě jiná}
+\Author{Pavel Marek}
+\Title{Chytrý termostat pro platformu STM32}
+\Keywords{Internet věcí \sep embedded programování \sep Internet Of Things \sep embedded programming}
 \Subject{Abstrakt práce}
 \Publisher{Univerzita Karlova}

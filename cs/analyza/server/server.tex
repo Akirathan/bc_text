@@ -31,7 +31,7 @@ STM zařízení offline nebo připojené k serveru.
 
 Možnosti jak udržovat spojení s STM jsou:
 \begin{enumerate}
-  \item Využít vlastnosti \emph{persistent connection} u HTTP/1.1 (TODO: citet RFC).
+  \item Využít vlastnosti \emph{persistent connection} u HTTP/1.1 \cite{HTTP-persistent-connection}.
     S využitím této vlastnosti by server mohl STM deklarovat jako offline v momentě, kdy by uzavřel
     TCP spojení.
   \item S ohledem na jednoduchost klienta (STM), udržet komunikaci co nejjednodušší tj.
@@ -67,8 +67,8 @@ aspektech:
 
 % Různé frameworky a jaký je mezi nimi rozdíl
 Existuje mnoho různých backend frameworků.
-Jsou to například NodeJS napsaný v Javascriptu, Ruby on Rails napsaný v Ruby, Django napsaný v Pythonu a
-Laravel napsaný v PHP. % TODO: formátovat jednotlivé názvy, případně přidat reference
+Jsou to například NodeJS napsaný v Javascriptu, Ruby on Rails napsaný v Ruby, Django \cite{Django} napsaný v Pythonu a
+Laravel napsaný v PHP.
 Všechny tyto frameworky nám mohou usnadnit práci podobným způsobem, pro naši aplikaci se liší především
 tím, jaký programovací jazyk používají.
 
@@ -78,13 +78,13 @@ jazyk používá, a vzhledem k tomu, že autor má předchozí zkušenosti s Pyt
 
 \subsubsection{Frontend}
 % Bootstrap
-Vytváření vzhledu webu si usnadníme použitím knihovny Bootstrap. % TODO: cite
+Vytváření vzhledu webu si usnadníme použitím knihovny Bootstrap \cite{Bootstrap}.
 Ta nám umožňuje snadno vytvořit moderně vypadající responsive webovou aplikaci. % TODO: co znamená responsive?
 
 % interaktivní device stránka
 Pro větší přehlednost požadujeme, aby se uživateli všechny jeho STM zobrazily na jednu stránku,
 která bude alespoň trochu interaktivní.
-Bylo by proto vhodné použít nějaký frontend framework, například ReactJS nebo AngularJS. % TODO: cite
+Bylo by proto vhodné použít nějaký frontend framework, například ReactJS nebo AngularJS.
 Integrace některého z těchto frontend frameworků do Djanga je ale příliš komplikovaná a náš web
 příliš malý pro to, aby se jejich použití vyplatilo.
-Proto budeme frontend vyvíjet pouze s pomocí Bootstrap a jQuerry.
+Proto budeme frontend vyvíjet pouze s pomocí Bootstrap a jQuerry \cite{jQuery}.

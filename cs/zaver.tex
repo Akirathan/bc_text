@@ -3,7 +3,7 @@
 
 Cíle práce se dají rozdělit do tří částí: embedded část práce, web-server část práce a nakonec
 komunikace mezi webový serverem a embedded zařízením.
-Dále shrneme jakým způsobem jsme dosáhli cíle v rámci jednotlivých částí.
+Následuje shrnutí jakým způsobem jsme dosáhli cíle v rámci jednotlivých částí.
 
 \paragraph{Embedded část práce}
 V rámci této části práce jsme měli za cíl vytvořit firmware umožňující uživateli nastavovat
@@ -19,6 +19,7 @@ připojit zařízení k serveru.
 \paragraph{Část práce zabývající se webovým serverem}
 Vzhledem k povaze embedded zařízení a požadavku na co nejjednodušší firmware, jsme se rozhodli
 implementovat webový server jako separátní entitu.
+Práci jsme si ulehčili použitím webového backendu Django.
 Přestože námi implementovaný webový server nemá příliš rozsáhlou funkcionalitu, mohl by do budoucna
 být rozšířen o spoustu dalších vlastností.
 
@@ -29,15 +30,16 @@ Nakonec jsme se rozhodli pro implementaci komunikace pouze pomocí HTTP.
 Specifikace komunikace by mohla být snadno rozšířena o několik dalších položek, aniž by se měnil její
 princip.
 Dále jsme rozebrali možnosti jak komunikaci zabezpečit a to jak ve smyslu autentizace STM na serveru,
-tak ve smyslu "skrytí" obsahu komunikace pomocí šifrování.
+tak ve smyslu \uv{skrytí} obsahu komunikace pomocí šifrování.
+Nakonec jsme ještě rozebrali možnosti synchronizace intervalů mezi serverem a STM.
 
 
 % shrnutí
 \paragraph{Shrnutí}
-Přestože v rámci této práce podporujeme "pouze" STM32 zařízení, které serveru posílá pouze naměřenou
+Přestože v rámci této práce podporujeme \uv{pouze} STM32 zařízení, které serveru posílá pouze naměřenou
 teplotu a vyměňuje si s ním nastavení časových intervalů, do specifikace komunikace by se poměrně
 snadno daly zařadit i další položky jako je například vlhkost vzduchu.
-Dodejme, že pro podporu jiných embedded zařízení by bylo potřeba přeprogramovat hardware-specifickou
-část firmware, nicméně na serveru by přidání podpory pro nový typ zařízení nebylo složité.
+Dodejme, že pro podporu jiných embedded zařízení by bylo potřeba přeprogramovat hardwarově specifickou
+část firmwaru, nicméně na serveru by přidání podpory pro nový typ zařízení nebylo složité.
 
 % použití RTOS a GUI knihovny

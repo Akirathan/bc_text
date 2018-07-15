@@ -11,7 +11,7 @@ K vykonání takto jednoduché úlohy nepotřebujeme příliš paměti, ani výk
 Bohatě nám vystačí zhruba 256 KB paměti pro kód a 64 KB RAM paměti.
 Po zařízení také požadujeme, aby nebylo příliš drahé a tím pádem neobsahovalo zbytečně výkonný
 hardware, který nevyužijeme.
-To rovnou vyřazuje z výběru zařízení typu Raspberry Pi (TODO: odkaz?).
+To rovnou vyřazuje z výběru zařízení typu Raspberry Pi.
 % S Linuxem by bylo snadnější programování
 Tím, že ušetříme na hardware, si zase ztížíme práci na software.
 Kdybychom totiž použili zařízení typu Raspberry Pi, mohli bychom do něj, díky relativně
@@ -31,21 +31,21 @@ za téměř ekvivalentní řešení.
 Dále by se dal použít dotykový displej, ten je ale pro naše účely zbytečně nákladný.
 
 % Vybereme STM3210C-Eval
-V našem případě použijeme zařízení STM3210C-Eval board se zabudovaným 3,2 palcovým displejem,
+V našem případě použijeme zařízení STM3210C-Eval board \cite{STM3210C-Eval} se zabudovaným 3,2 palcovým displejem,
 joystickem, GPIO konektory a ethernetovým konektorem.
 Povaha našeho firmware umožňuje použít jiné zařízení z rodiny STM32 pouze s drobnými modifikacemi.
 
 STM3210C-Eval board nepatří mezi nejlevnější zařízení, na druhou stranu ale obsahuje obrovské
 množství periferií které nevyužijeme - například CAN, Motor control, SD kartu, apod.
 
-% TODO: formátovat poznámku
+% TODO: formatovat poznamku
 \strong{Poznámka}: ve zbytku textu budeme koncové zařízení označovat pouze jako \emph{STM}.
 
 % teplotní senzor
 \subsubsection{Externí komponenty}
 \paragraph{Teplotní senzor}
 Dále potřebujeme dostatečně přesný a zároveň levný teplotní senzor.
-K tomu účelu nám vystačí DS18B20 (TODO: citet), který můžeme k téměř jakémukoli zařízení připojit pomocí tří
+K tomu účelu nám vystačí DS18B20 \cite{DS18B20}, který můžeme k téměř jakémukoli zařízení připojit pomocí tří
 GPIO konektorů - napájení, uzemnění a data.
 Jedna z výhod teplotního senzoru DS18B20 je ta, že sám provádí převod z analogové naměřené
 teploty na digitální data.
@@ -76,5 +76,5 @@ museli uživateli dodat úplně jiné zařízení, na kterém webový server pob
 
 V našem případě bude lepší použít právě jeden centrální webový server, který poběží na hardwaru typického
 serveru.
-Mimo jiné můžeme na tomto centrálním webovém serveru s výhodou využít architektury LAMP (TODO: odkaz),
+Mimo jiné můžeme na tomto centrálním webovém serveru s výhodou využít architektury LAMP (Linux, Apache, MySQL, and PHP),
 která nám výrazně usnadní vývoj webu.

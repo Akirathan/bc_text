@@ -1,6 +1,6 @@
 
 \subsection{Eventy}
-V rámci STM mohou vznikat některé důležité události, které ovlivní víc částí programu.
+V této kapitole rozebereme některé důležité události, které mohou v rámci firmware STM vzniknout.
 
 Mezi tyto události patří:
 \begin{itemize}
@@ -15,7 +15,7 @@ Mezi tyto události patří:
 
   % ConnectEvent
   \item Připojení k serveru. Myšleno ne pouze navázané TCP spojení, ale spojení ve smyslu naší
-    aplikace tj. server poslal svůj aktuální čas ve formátu timestampu (viz ...).
+    aplikace tj. server poslal svůj aktuální čas ve formátu timestampu.
     STM reaguje tak, že si právě přijatý timestamp nastaví jako svůj vlastní čas, tedy
     uloží timestamp do RTC.
 
@@ -25,7 +25,7 @@ Mezi tyto události patří:
 
   % CommunicationErrorEvent
   \item Chyba síťové komunikace. Toutu chybou máme na mysli v podstatě libovolnou síťovou chybu
-    od vypojení ethernetového kabelu až po nemožnost naparsování HTTP reponse.
+    od vypojení ethernetového kabelu až po nemožnost naparsování HTTP response.
     Na tuto událost STM reaguje restartováním celé komunikace.
     Kvůli složitosti implementace nemá vůbec smysl aby si STM pamatovalo, v jakém stavu chyba
     nastala a zkoušelo komunikace restartovat právě od tohoto momentu.
@@ -41,8 +41,8 @@ Mezi tyto události patří:
 
   % KeySavedEvent
   \item Nastavení klíče. Tato událost nastává v momentě, kdy je aktuální obrazovka \texttt{KeyFrame},
-    a uživatel stiskne submit čudlík.
-    STM na to reaguje každopádně uložením klíče do EEPROM a také pokusem o připojení k serveru,
+    a uživatel stiskne tlačítko \uv{submit}.
+    STM na to reaguje uložením klíče do EEPROM a také pokusem o připojení k serveru,
     pokud jsou všechny podmínky pro tento pokus splněny.
 \end{itemize}
 

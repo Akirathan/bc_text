@@ -2,16 +2,17 @@
 \subsection{EEPROM}
 EEPROM používáme jako persistentní datové uložiště, do kterého ukládáme konfiguraci intervalů
 a privátní DES klíč.
-Kromě samotných intervalů a samotného klíče je ještě potřeba do EEPROM ukládat metadata -
-například počet intervalů, timestamp intervalů nebo flag značící jestli klíč je uložen.
+Kromě samotných intervalů a klíče je ještě potřeba do EEPROM ukládat metadata -
+například počet intervalů, timestamp intervalů nebo příznak značící jestli klíč je uložen.
+\footnote{DES klíč totiž může mít všech bajty nulové}.
 Je zbytečně složité kvůli těmto pár datům a metadatům používat nějaký file systém.
 
 % Detaily implementace
 Co se týká implementačních detailů, tak \texttt{EEPROM} je třída, která se stará o ukládání
 dat do EEPROM a mimo jiné obsahuje definice adres, na které jsou ukládány různá data a metadata.
 EEPROM při inicializaci nevyžaduje žádný specifický formát, což mimo jiné znamená, že vymazat
-všechna data z EEPROM znamená vyplnit celou EEPROM nulami.
+všechna data z EEPROM znamená vyplnit celou EEPROM nulovými bajty.
 
-Vymazání celé EEPROM je také něco, co je vhodné udělat předtím než se uživatel STM rozhodne
+Vymazání celé EEPROM je také něco, co je vhodné udělat předtím, než se uživatel STM rozhodne
 toto zařízení předat někomu jinému.
 

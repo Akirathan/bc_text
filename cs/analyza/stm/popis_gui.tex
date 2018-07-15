@@ -55,9 +55,7 @@ V rámci celého GUI nám stačí tyto grafické prvky:
 Nejprve uvedeme nákresy jednotlivých obrazovek a popíšeme co znamenají.
 Potom uvedeme tzv. frame diagram tj. stavový diagram obrazovek, kde popíšeme jak se mezi sebou
 jednotlivé obrazovky přepínají.
-
-Zeleně zabarvený text v obrázcích (TODO: ztučněný, pokud nebudeme tisknout barevně) představuje
-buď nakliknutelný čudlík nebo měnitelný prvek - například čas.
+Zeleně zabarvený text v obrázcích představuje buď nakliknutelný čudlík nebo měnitelný prvek - například čas.
 Jak jsme již zmiňovali STM se ovládá pomocí joysticku pod displejem.
 Pohybem joysticku do stran přepínáme mezi jednotlivými nakliknutelnými prvky.
 Pohybem joysticku nahoru a dolu měníme hodnoty právě nakliknutých prvků, pokud to jde.
@@ -69,12 +67,12 @@ v kapitole architektura.
 % ClkFrame
 \paragraph{ClkFrame}
 \begin{figure}[H]\centering
-\includegraphics[width=140mm, height=140mm]{../img/clk_frame.jpg}
+\includegraphics[width=100mm, height=100mm]{../img/clk_frame.jpg}
 \caption{ClkFrame - nastavení času}
 \label{clk-frame}
 \end{figure}
 
-Tato obrazovka je zobrazena po startu STM v momentě, kdy ethernetová periferie není inicializována a
+Obrazovka \ref{clk-frame} je zobrazena po startu STM v momentě, kdy ethernetová periferie není inicializována a
 STM se tedy nemůže připojit k serveru aby mohlo rovnou synchronizovat čas se serverem.
 Uživatel musí nastavit nějaký čas (není nutné aby odpovídal reálnému času), aby STM vědělo, který
 interval je aktuální a tedy jakou teplotu má udržovat.
@@ -82,12 +80,12 @@ interval je aktuální a tedy jakou teplotu má udržovat.
 % SetIntervalFrame
 \paragraph{SetIntervalFrame}
 \begin{figure}[H]\centering
-\includegraphics[width=140mm, height=140mm]{../img/interval_setting_frame.jpg}
+\includegraphics[width=100mm, height=100mm]{../img/interval_setting_frame.jpg}
 \caption{SetIntervalFrame - nastavení intervalů}
 \label{set-interval-frame}
 \end{figure}
 
-Tato obrazovka umožňuje uživateli nastavit časové intervaly s teplotou.
+Obrazovka \ref{set-interval-frame} umožňuje uživateli nastavit časové intervaly s teplotou.
 Obrazovka zobrazuje nastavení pro právě jeden interval, pokud uživatel stiskne tlačítko
 \uv{Next}, zobrazí se nastavení dalšího intervalu, pokud stiskne tlačítko \uv{End}, nastavování
 intervalů se ukončí a všechny nastavené intervaly jsou uloženy do EEPROM.
@@ -96,7 +94,7 @@ Zobrazena je v těchto případech:
 \begin{itemize}
   \item když EEPROM neobsahuje žádné nastavení intervalů což nastává v případě kdy uživatel
     ještě žádné intervaly nenastavoval - tedy po prvním spuštění STM.
-  \item Když uživatel zmáčkne v obrazovce \texttt{MainFrame} čudlík \uv{reset intervals}.
+  \item Když uživatel zmáčkne v obrazovce \texttt{MainFrame} tlačítko \uv{reset intervals}.
 \end{itemize}
 
 % OverviewIntervalFrame
@@ -109,12 +107,12 @@ ukončí.
 % ConnectFrame
 \paragraph{ConnectFrame}
 \begin{figure}[H]\centering
-\includegraphics[width=140mm, height=140mm]{../img/connect_frame.jpg}
+\includegraphics[width=100mm, height=100mm]{../img/connect_frame.jpg}
 \caption{ConnectFrame - připojení k serveru}
 \label{connect-frame}
 \end{figure}
 
-Tato obrazovka je zobrazena ihned po spuštění STM v momentě, kdy ethernetová periferie je inicializována
+Obrazovka \ref{connect-frame} je zobrazena ihned po spuštění STM v momentě, kdy ethernetová periferie je inicializována
 a klíč ještě není uložen v EEPROM.
 V takovém případě se STM může ihned připojit k serveru a nemusíme uživatele zdržovat s nastavováním
 času.
@@ -122,23 +120,23 @@ V takovém případě se STM může ihned připojit k serveru a nemusíme uživa
 % KeyFrame
 \paragraph{KeyFrame}
 \begin{figure}[H]\centering
-\includegraphics[width=140mm, height=140mm]{../img/key_frame.jpg}
+\includegraphics[width=100mm, height=100mm]{../img/key_frame.jpg}
 \caption{KeyFrame - zadání klíče vygenerovaného serverem}
 \label{key-frame}
 \end{figure}
 
-Do této obrazovky uživatel zadá 8-bytový DES klíč vygenerovaný na serveru.
+Do obrazovky \ref{key-frame} uživatel zadá osmi bajtový DES klíč \cite{DES} vygenerovaný na serveru.
 Po stisknutí tlačítka \uv{Submit} se STM pokusí přihlásit na server.
 
 % MainFrame
 \paragraph{MainFrame}
 \begin{figure}[H]\centering
-\includegraphics[width=140mm, height=140mm]{../img/main_frame_online.jpg}
+\includegraphics[width=100mm, height=100mm]{../img/main_frame_online.jpg}
 \caption{MainFrame - hlavní obrazovka}
 \label{main-frame}
 \end{figure}
 
-MainFrame reprezentuje hlavní obrazovku.
+MainFrame (\ref{main-frame}) reprezentuje hlavní obrazovku.
 Jsou zde zobrazeny zásadní hodnoty - aktuálně naměřená teplota (actual temp), přednastavená teplota
 (set temp) a stav připojení k serveru.
 % tlačítko connect
@@ -156,8 +154,8 @@ tlačítka a do \texttt{OverviewIntervalFrame} pomocí \uv{overview intervals} t
 %%%%%%%%%%%%%%%
 \subsubsection{Vztahy mezi obrazovkami}
 
-\begin{figure}[H]\centering
-\includegraphics[width=140mm, height=140mm]{../diagrams/frame_diagram.pdf}
+\begin{figure}[tbh!]
+\includegraphics[scale=0.51]{../diagrams/frame_diagram.pdf}
 \caption{Diagram přepínání obrazovek}
 \label{frame-diagram}
 \end{figure}

@@ -67,34 +67,28 @@ Tato možnost je ovšem zbytečně složitá na implementaci.
 
 % Synchronizace času - možnosti a proč je potřeba?
 Pro synchronizaci config dat je potřeba, aby server i STM měli nastavený společný čas.
-Vzhledem k tomu, že implementace \emph{NTP} (Network time protocol) ale i jednoduššího a podobného
-protokolu \emph{SNTP} (Simple Network Time Protocol) je na STM pracná, zvolíme jiný, jednodušší způsob synchronizace
-času mezi STM a serverem, který bude vycházet z \emph{TP} (Time protocol).
-% TODO: citovat všechny ty protokoly?
+Vzhledem k tomu, že implementace NTP \cite{NTP} ale i jednoduššího a podobného
+protokolu SNTP \cite{SNTP} je na STM pracná, zvolíme jiný, jednodušší způsob synchronizace
+času mezi STM a serverem, který bude vycházet z TP \cite{TP}.
 
 % vyjdeme z TP a upravíme ho pro naše potřeby
 V rámci synchronizace času postačí sekundové rozlišení.
-Vyjdeme z \emph{TP}, který má sekundové rozlišení, a ještě ho zjednodušíme pro naše účely.
-Podobně jako je tomu u \emph{TP}, budeme ze serveru posílat počet sekund, které
+Vyjdeme z TP, který má sekundové rozlišení, a ještě ho zjednodušíme pro naše účely.
+Podobně jako je tomu u TP, budeme ze serveru posílat počet sekund, které
 uběhly od nějakého pevně stanoveného data.
-Na rozdíl od \emph{TP} to ale ještě zjednodušíme tak, že tento počet sekund bude posílat server
+Na rozdíl od TP to ale ještě zjednodušíme tak, že tento počet sekund bude posílat server
 v rámci první HTTP odpovědi.
-Další rozdíl od \emph{TP} bute ten, že naše počáteční datum nebude \texttt{1.1.1900}, ale \texttt{1.1.1970}.
+Další rozdíl od TP bute ten, že naše počáteční datum nebude \texttt{1.1.1900}, ale \texttt{1.1.1970}.
 % definice timestamp
-\textbf{Timestampem} budeme dále uvažovat číslo reprezentující počet sekund od \texttt{1.1.1970 00:00},
+\emph{Timestampem} budeme dále uvažovat číslo reprezentující počet sekund od \texttt{1.1.1970 00:00},
 které se vejde do 4-bytové proměnné bez znamenénka.
-% TODO: footnote?
-Poznámka: výše zmíněná definice je totožná s \emph{Unix timestamp} (viz ...), který je nějakým způsobem
-podporován ve většině programovacích jazyků, což nám usnadní programování serveru.
+\footnote{Tato definice je totožná s Unix timestamp \cite{Unix-timestamp}, který je nějakým způsobem
+podporován ve většině programovacích jazyků, což nám usnadní programování serveru.}
 
-% correct_bit
-Když uživatel nastaví intervaly, tak k nim STM uloží aktuální timestamp
-a ještě k tomu příznak, který značí, že timestamp je synchronizovaný.
-Tento příznak budeme dále označovat jako \textbf{correct\_bit}.
 
 % Problém zpožděného času po synchronizaci
 V souvislosti se vzdáleností STM od serveru a se zpožděním síťové komunikace se může
-stát, že čas na STM bude o pár sekund opožděný.
+stát, že čas na STM bude až o pár sekund opožděný.
 Kdyby se uživateli například podařilo na serveru uložit nové nastavení intervalů
 a pár mikro sekund poté nastavit nové intervaly na STM, mělo by STM správně nahrát
 intervaly na server, namísto toho ale intervaly stáhne ze serveru a svoje nastavení přepíše.
@@ -102,6 +96,25 @@ Předpokládejme, že uživatel toto dělat nebude.
 
 % Poznámky o time zone
 Z definice timestamp vyplývá, že STM nerozlišuje jednotlivé časové zóny.
-Pro jednoduchost budeme čas na STM interpretovat jako čas v zóně \emph{UTC+2}.
+Pro jednoduchost budeme čas na STM interpretovat jako čas v zóně UTC+2.
 Pro správnou interpretaci času na STM v různých časových zónách bychom museli implementovat
-sofistikovanější časový protokol typu \emph{NTP}.
+sofistikovanější časový protokol typu NTP.
+
+% Synchronizace intervalů
+\subsubsection{Synchronizace intervalů}
+Synchronizace intervalů v situaci, kdy je STM připojeno k serveru a tím pádem má synchronizovaný
+čas, je přímočará.
+Následující text popisuje jak lze intervaly synchronizovat když byly na STM uloženy v momentě, kdy
+bylo STM offline.
+
+Kromě samotných intervalů a jejich timestampu ukládá STM do své EEPROM ještě příznak značící
+jestli toto uložení proběhlo v momentě, kdy byl čas synchronizován se serverem.
+
+Po synchronizaci času se serverem si STM opraví timestamp intervalů v EEPROM, není-li nastaven
+výše zmíněný příznak.
+Tato oprava probíhá tak, že k němu přičte rozdíl mezi timestampem přijatým ze serveru a timestampem
+reprezentující aktuální, realitě pravděpodobně neodpovídající, čas na STM.
+\footnote{implicitně je na STM totiž nastaveno datum 1.1.1970}
+
+Tímto mechanismem jsme docílili toho, že z pohledu serveru má STM vždy nastavený reálný čas.
+

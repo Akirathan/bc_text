@@ -58,6 +58,7 @@
 \usepackage[usenames]{xcolor}  % barevná sazba
 
 \usepackage{float}          % H placement of figures/tables
+\usepackage{url}
 
 %%% Údaje o práci
 
@@ -101,17 +102,17 @@ Rád bych poděkoval svému vedoucímu panu doc. Burešovi za jeho četné rady 
 
 % Abstrakt (doporučený rozsah cca 80-200 slov; nejedná se o zadání práce)
 \def\Abstrakt{%
-Cílem práce je vytvořit systém pro regulování domácího vytápění.
-Součástí celého systému je zařízení, které je umístěno u uživatele doma a pravidelně měří
-a udržuje teplotu tak, jak ji uživatel přednastavil.
+Cílem práce je vytvořit systém pro regulaci domácího vytápění.
+Součástí celého systému je embedded zařízení z platformy STM32, které je umístěno u uživatele doma
+a pravidelně měří a udržuje teplotu tak, jak ji uživatel přednastavil.
 Dále centrální webový server, se kterým zařízení komunikuje a pomocí kterého uživatel
 může na dálku měnit nastavení a sledovat aktuální stav zařízení. % 54
-Součástí systému je návrh a implementace komunikace mezi webovým serverem a zařízením,
-která je specifická v tom, že chceme uživateli povolit současné nastavování na zařízení
-i na serveru.
+Součástí práce je návrh a implementace komunikace mezi a zařízením a webovým serverem,
+v rámci které zařízení periodicky posílá na server naměřenou teplotu a synchronizuje
+s ním nastavení.
 }
 \def\AbstraktEN{%
-Abstract.
+
 }
 
 % 3 až 5 klíčových slov (doporučeno), každé uzavřeno ve složených závorkách
@@ -157,11 +158,28 @@ Abstract.
 
 %%% Tabulky v bakalářské práci (opět nemusí být nutné uvádět)
 %%% U matematických prací může být lepší přemístit seznam tabulek na začátek práce.
-\listoftables
+% \listoftables
 
 %%% Použité zkratky v bakalářské práci (opět nemusí být nutné uvádět)
 %%% U matematických prací může být lepší přemístit seznam zkratek na začátek práce.
 \chapwithtoc{Seznam použitých zkratek}
+TCP/IP - Transmission Control Protocol/Internet Protocol
+
+HTTP - Hypertext Transfer Protocol
+
+HTTPS - Hypertext Transfer Protocol Secure
+
+TLS - Transport Layer Security
+
+HTML - Hypertext Markup Language
+
+DNS - Domain Name System
+
+DHCP - Dynamic Host Configuration Protocol
+
+URL - Uniform Resource Locator
+
+JSON - Javascript Object Notation
 
 %%% Přílohy k bakalářské práci, existují-li. Každá příloha musí být alespoň jednou
 %%% odkazována z vlastního textu práce. Přílohy se číslují.

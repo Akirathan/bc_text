@@ -4,9 +4,10 @@
 % Co požadujeme
 \paragraph{Požadavky}
 \begin{itemize}
-    \item Autentikace zpráv: potřebujeme zajistit, aby server přijímal pouze zprávy od STM a nikoho jiného.
-    \item Šifrování zpráv: šifrovat budeme jak hlavičky, tak těla HTTP zpráv. Z hlediska bezpečnosti
-        je to lepší než šifrovat pouze těla.
+    \item Autentikace zpráv. Potřebujeme zajistit, aby server přijímal pouze zprávy od STM a nikoho jiného.
+    \item Šifrování zpráv. Z hlediska zabezpečení by bylo nejlepší kdybychom šifrovali jak těla HTTP
+      zpráv, tak jejich hlavičky.
+      Pro jednoduchost implementace budeme šifrovat pouze těla zpráv.
 \end{itemize}
 
 
@@ -14,10 +15,11 @@
 \paragraph{HTTPS}
 Komunikace webového serveru s STM by mohla být kompletně vedena v HTTPS.
 Pro HTTPS potřebujeme na STM TLS.
-To je poskytováno například knihovnou Cyclone-SSL, která je závislá na knihovně Cyclone-TCP/IP.
-My už jsme ovšem pro STM použili knihovnu LwIP, protože STM poskytuje ethernetový driver přímo
+To je poskytováno například knihovnou Cyclone-SSL \cite{Cyclone-SSL}, která je závislá na knihovně
+Cyclone-TCP/IP \cite{Cyclone-TCP/IP}.
+My už jsme ovšem pro STM použili knihovnu LwIP, protože STM poskytuje ethernetový ovladač přímo
 pro tuto knihovnu a tím pádem můžeme LwIP rovnou použít.
-Kdybychom ale chtěli použít Cyclone-TCP/IP, tak bychom museli ještě implementovat driver pro
+Kdybychom ale chtěli použít Cyclone-TCP/IP, tak bychom museli ještě implementovat ovladač pro
 tuto knihovnu.
 Závěr je tedy takový, že HTTPS používat nebudeme.
 
@@ -27,6 +29,8 @@ Kdybychom chtěli použít pouze \emph{asymetrické} šifrování, server by mě
 by šifrovalo komunikaci veřejným klíčem.
 Problém tohoto řešení je nedostatečná autentizace - veřejný klíč může získat každý, nejen STM.
 Pro naše účely je tedy lepší použít \emph{symetrické} šifrování.
+Dodejme ještě že střídání asymetrického a symetrického šifrování, podobně jako je tomu u výše zmíněného
+HTTPS, jsme zavrhli zejména kvůli složitosti.
 % jaké šifrování? --> DES
 Potřebujeme, aby uživatel mohl pohodlně zadat klíč do STM.
 Bude se nám tedy hodit šifrování s krátkým klíčem, což je například DES, které má
@@ -41,32 +45,28 @@ Následující text se zabývá problémem kde a kdy vzít tyto klíče.
 \\ \\ 
 Máme dvě možnosti:
 \begin{itemize}
-    \item STM má hardcoded klíč ve svém FW a server má databází všech těchto klíčů.
-    \item Server generuje klíče na žádost uživatele.
+    \item STM má zabudovaný klíč ve svém firmware a server má databází všech těchto klíčů.
+    \item Server generuje klíč na žádost uživatele.
 \end{itemize}
 
 % Proč je hardcoded klíč špatný nápad?
-Mít klíč zabudovaný do FW STM není příliš vhodné pro případy, kdy by si uživatel pořídil STM
-"z druhé ruky".
+Mít klíč zabudovaný do firmware STM není příliš vhodné pro případy, kdy by si uživatel pořídil STM
+\uv{z druhé ruky}.
 Zejména je zde nižší zabezpečení nového vlastníka STM, bývalý vlastník by totiž teoreticky
-mohl z FW dostat podobu klíče a podvrhovat komunikaci.
+mohl z firmware dostat podobu klíče a podvrhovat komunikaci novému vlastníkovi.
 
 Proto zvolíme řešení s generováním nových klíčů na žádost uživatele.
 
 % Generování klíčů
 \subsubsection{Generování klíčů}
 
-% Obecné vlastnosti generování klíčů
-Nevýhoda generování klíčů na serveru je ta, že server nemůže vědět, kterému STM má klíč přiřadit.
-
 % Jak server může přiřadit klíče jednotlivým STM?
 % predem, resp. až po přijetí connect
-Server si ke každému STM potřebuje přiřadit klíč.
+Server si ke každému STM potřebuje přiřadit klíč, což může udělat nejdřív v momentě, kdy
+mu od daného STM přijde \emph{connect} zpráva (což je první zpráva, kterou STM pošle - viz
+\ref{kap:specifikace-http-zprav}).
 I kdyby dopředu věděl, který klíč patří kterému STM, nemůže vědět od kterého STM mu přišla
-\emph{connect} zpráva (což je první zpráva, kterou STM pošle - viz ...), protože dopředu nezná
-IP adresy jednotlivých STM.
-Což znamená, že není důležité, jestli má klíče k zařízením přiřazené předem, nebo jestli
-si je přiřadí až po tom, co od jednotlivých zařízení dostane \emph{connect} zprávu.
+\emph{connect} zpráva protože dopředu nezná IP adresy jednotlivých STM.
 
 % Postup generování klíčů
 \subparagraph{Postup generování klíčů}
@@ -74,11 +74,16 @@ si je přiřadí až po tom, co od jednotlivých zařízení dostane \emph{conne
     \item Server vygeneruje klíč s omezenou životností na žádost uživatele.
     \item Uživatel zadá klíč do STM.
     \item STM pošle šifrovanou \emph{connect} zprávu serveru.
-    \item Server bude dešifrovat zprávu všemi dosud nespárovanými klíči, dokud nedostane korektní
-        \emph{connect} zprávu tj. korektní HTTP hlavičku s tělem obsahujícím existující Device ID.
-    \item Server má sprárované Device ID s klíčem a IP adresou.
+    \item Server se pokouší dešifrovat zprávu všemi dosud nespárovanými klíči, dokud nedostane korektní
+        \emph{connect} zprávu tj. korektní HTTP hlavičku s tělem obsahujícím existující \emph{device ID}.
+    \item Server má sprárované \emph{device ID} s klíčem a IP adresou.
 \end{enumerate}
 
-
-% UID (TODO: tohle bude v architektuře)
-%Každé STM zařízení má v sobě uložený 96-bitový unikátní identifikátor.
+Výše zmíněný mechanismus generování klíčů a obecně vzato symetrické šifrování v tomto pojetí sice
+přidává bezpečnost do komunikace, ovšem na úkor rychlosti připojení STM k serveru.
+Server totiž dostane po každé \emph{connect} zprávu z \uv{neznámé} IP adresy a musí se tudíž
+pokusit tuto zprávu dešifrovat postupně jednak všemi dosud nespárovanými klíči, ale také klíči
+ze všech offline STM.
+Proces připojení STM k serveru může být tedy poměrně zdlouhavý, obzvlášť v případě kdy je mnoho
+STM offline.
+To ale v našem případě nevadí.
