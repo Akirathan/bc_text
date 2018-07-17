@@ -1,6 +1,6 @@
 
 Webový server je rozdělený do dvou na sobě nezávislých komponent \texttt{user\_interface} a
-\texttt{stm\_communication} tak, jak je to znázorněno na obrázku %\ref{server-overview}.
+\texttt{stm\_communication} tak, jak je to znázorněno na obrázku \ref{server-overview}.
 \texttt{user\_interface} zprostředkovává veškerou komunikaci mezi uživatelem (klientem) a jeho STM
 zařízeními sestávající z nastavování intevalů a čtení aktuálně naměřené teploty.
 \texttt{stm\_communication} přijímá aktuálně naměřenou teplotu od STM zařízení a vyměňuje si s nimi intervaly.
@@ -8,11 +8,11 @@ Obě komponenty čtou a zapisují data do společné databáze.
 Tím je nepřímo zajištěna komunikace mezi uživatelem a jeho zařízením skrz server.
 
 % server-overview obrazek
-%\begin{figure}[tbh]\centering
-%\includegraphics[scale=0.6]{../img/server_overview.pdf}
-%\caption{Komponenty webového serveru}
-%\label{server-overview}
-%\end{figure}
+\begin{figure}[tbh]\centering
+\includegraphics[scale=0.6]{../img/server_overview.pdf}
+\caption{Komponenty webového serveru}
+\label{server-overview}
+\end{figure}
 
 % Použití frontend frameworku by bylo vhodné.
 V kapitole analýza jsme se rozhodli použít Django jako backend framework, k vývoji frontend
@@ -28,15 +28,13 @@ k dispozici velikou abstrakci, máme zjednodušenou práci.
 % Databázové schéma
 \subsection{Databázové schéma}
 
-%\begin{figure}[tbh]\centering
-%\includegraphics[scale=0.6]{../diagrams/databazove_schema.pdf}
-%\caption{Databázové schéma}
-%label{databazoveschema}
-%\end{figure}
+\begin{figure}[tbh]\centering
+\includegraphics[scale=0.6]{../diagrams/databazove_schema.pdf}
+\caption{Databázové schéma}
+\label{databazoveschema}
+\end{figure}
 
-Databázové schéma 
-%\ref{databazoveschema}
-ukazuje základní objekty a vztahy mezi nimi.
+Databázové schéma \ref{databazoveschema} ukazuje základní objekty a vztahy mezi nimi.
 
 Na server se může registrovat libovolný uživatel zadáním uživatelského jména, hesla a potvrzením
 emailové adresy.

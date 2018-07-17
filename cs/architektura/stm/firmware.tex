@@ -71,14 +71,14 @@ Přestože nepoužíváme STL, přidá nám C++ další abstrakci, která nám u
 % Struktura
 \subsubsection{Struktura}
 
-%\begin{figure}[tbh]\centering
-%\includegraphics[width=140mm, height=140mm]{../diagrams/stm_fw_struktura.pdf}
-%\caption{Struktura firmware}
-%\label{stm-fw-struktura}
-%\end{figure}
+\begin{figure}[tbh]\centering
+\includegraphics[width=140mm, height=140mm]{../diagrams/stm_fw_struktura.pdf}
+\caption{Struktura firmware}
+\label{stm-fw-struktura}
+\end{figure}
 
 % popis obrázku
-Na obrázku (TODO odkaz) vidíme strukturu celého firmware rozdělenou do jednotlivých vrstev.
+Na obrázku \ref{stm-fw-struktura} vidíme strukturu celého firmware rozdělenou do jednotlivých vrstev.
 Jednotlivé entity na obrázku odpovídají buď jednomu typu resp. třídě (jako je tomu v případě \texttt{Application}),
 skupině tříd, nebo knihovně.
 \texttt{Application} je na nejvyšší úrovni abstrakce a provádí hlavní aplikační logiku.
@@ -89,7 +89,7 @@ Skupina \texttt{Application Drivers} obsahuje aplikačně specifické wrappery h
 \texttt{STM32Cube}, v jednom případě i třídu \texttt{OneWire}, která přistupuje k hardware přímo
 a ne přes \texttt{STM32Cube}.
 
-Obrázek (TODO odkaz) slouží pouze jako nástin struktury firmware a nikoli jako detailní popis
+Obrázek \ref{stm-fw-struktura} slouží pouze jako nástin struktury firmware a nikoli jako detailní popis
 fungování jednotlivých typů.
 Bližší informace o struktuře skupiny \texttt{Communication} je uvedena v kapitole \uv{Implementace komunikace},
 struktura skupiny \texttt{GUI} je popsána v kapitole \uv{GUI}.

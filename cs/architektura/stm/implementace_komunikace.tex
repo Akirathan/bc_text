@@ -70,13 +70,13 @@ k následnému šíření.
 Kromě toho že Client je HTTP klientem, musí také být implementován tak, aby byl kompatibilní s LwIP
 callback API.
 
-%\begin{figure}[tbh!]\centering
-%\includegraphics[width=\textwidth, height=150mm]{../diagrams/stm_komunikacni_cyklus.pdf}
-%\caption{Komunikační cyklus}
-%\label{stm-komunikacni-cyklus}
-%\end{figure}
+\begin{figure}[tbh!]\centering
+\includegraphics[width=\textwidth, height=150mm]{../diagrams/stm_komunikacni_cyklus.pdf}
+\caption{Komunikační cyklus}
+\label{stm-komunikacni-cyklus}
+\end{figure}
 
-Na diagramu (TODO: odkaz) je znázorněn \emph{komunikační cyklus} a jednotlivé stavy tohoto cyklu.
+Na diagramu \ref{stm-komunikacni-cyklus} je znázorněn \emph{komunikační cyklus} a jednotlivé stavy tohoto cyklu.
 Zjednodušeně řečeno se v rámci celého cyklu nejprve buď pošlou intervaly na server nebo stáhnou ze
 serveru - záleží na tom, jestli má STM větší timestamp než server - poté se pošle teplota na server.
 Pokud cyklus probíhá poprvé, musí se nejprve STM k serveru přihlásit.
