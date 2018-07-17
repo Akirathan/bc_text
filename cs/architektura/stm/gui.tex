@@ -5,13 +5,13 @@ V rámci kapitoly \ref{popis-gui} jsme specifikovali požadavky, které máme na
 rozhraní.
 V této kapitole se detailněji podíváme na implementaci celého GUI.
 
-\begin{figure}[tbh!]\centering
-\includegraphics[scale=0.75]{../diagrams/stm_gui.pdf}
-\caption{Hierarchie základních tříd v GUI}
-\label{fig:stm-gui}
-\end{figure}
+%\begin{figure}[tbh!]\centering
+%\includegraphics[scale=0.75]{../diagrams/stm_gui.pdf}
+%\caption{Hierarchie základních tříd v GUI}
+%\label{fig:stm-gui}
+%\end{figure}
 
-Obrázek \ref{fig:stm-gui} zobrazuje hierarchii základních tříd a vztahy mezi nimi.
+Obrázek (TODO: odkaz) zobrazuje hierarchii základních tříd a vztahy mezi nimi.
 Pro jednoduchost zobrazuje pouze pár konkrétních tříd jako příklad: \texttt{TextWindow} jako statické
 okno, které pouze zobrazuje text a \texttt{HexCharWindow} jako kontrolní okno, které je součástí
 \texttt{KeyFrame} a zobrazuje právě jeden hexadecimální znak, jehož hodnotu může uživatel
@@ -81,13 +81,13 @@ metodu která na tento callback bude reagovat.
 Místo toho, abychom vyjmenovali všechny možné typy callbacků a jejich parametry, zpřesníme
 strukturu callback metod na příkladě.
 
-\begin{figure}[tbh!]\centering
-\includegraphics[scale=0.6]{../diagrams/stm_callback_metody.pdf}
-\caption{Příklad hierarchie volání callback metod}
-\label{fig:stm-callback-metody}
-\end{figure}
+%\begin{figure}[tbh!]\centering
+%\includegraphics[scale=0.6]{../diagrams/stm_callback_metody.pdf}
+%\caption{Příklad hierarchie volání callback metod}
+%\label{fig:stm-callback-metody}
+%\end{figure}
 
-Diagram \ref{fig:stm-callback-metody} ilustruje situaci, kdy je uživatel v \texttt{OverviewIntervalFrame}, stiskne
+Diagram (TODO: odkaz) ilustruje situaci, kdy je uživatel v \texttt{OverviewIntervalFrame}, stiskne
 tlačítko \uv{exit} a dostane se zpět do \texttt{MainFrame}.
 Proces na diagramu je následující:
 \begin{enumerate}
