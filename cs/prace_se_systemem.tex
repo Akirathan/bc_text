@@ -25,10 +25,10 @@ V reálném použití nebude použití STM32F4-Discovery nutné.
 Do STM3210C-Eval boardu (dále jen STM) je zapojen teplotní senzor Dallas DS18B20 \cite{DS18B20}
 a relé.
 Konkrétní zapojení do GPIO pinů se dá velice snadno změnit ve zdrojovém kódu.
-Dole pod displejem STM jsou zleva vidět čtyři LED diody, černé RESET tlačítko, joystick ...
+Dole pod displejem STM je několik tlačítek, joystick a čtyři LED diody.
 Z toho reálně využíváme pouze joystick jako vstup a červenou diodu jako notifikaci o tom, že
 se v STM stala nějaká chyba.
-\uv{reset} tlačítko slouží jako restart firmwaru STM.
+Černé \uv{reset} tlačítko slouží jako restart firmwaru STM.
 
 Na displeji je aktuálně zobrazen \texttt{MainFrame}.
 
@@ -61,6 +61,8 @@ Dodejme ještě, že takto zobrazených zařízení může na stránce být víc
 Přidání nového zařízení je proces, při kterém server vygeneruje nový privátní DES klíč, který uživatel
 zadá do STM a to dále šifruje zprávy pomocí tohoto klíče.
 
-Na webový stránkách stačí kliknout na tlačítko \uv{register new device} a potom na \uv{generate new key}.
-
+Na webový stránkách stačí kliknout na tlačítko \uv{register new device}, zadat ID zařízení a dále
+kliknout na \uv{generate new key}.
+Server zkontroluje jestli zadané ID je ID existujícího STM a následně vygeneruje DES klíč s omezenou
+životností.
 

@@ -27,17 +27,17 @@ odezvou zobrazit uživateli.
 Kapitola \ref{analyza-komunikace} detailně specifikuje komunikaci mezi serverem a STM.
 Pro teď nám vystačí informace, že veškerá komunikace bude probíhat pomocí HTTP zpráv.
 Ta je důležitá pro to, abychom se mohli rozhodnout jakým způsobem na serveru rozhodnout, zda je dané
-STM zařízení offline nebo připojené k serveru.
+STM zařízení offline nebo je k němu připojené.
 
 Možnosti jak udržovat spojení s STM jsou:
 \begin{enumerate}
-  \item Využít vlastnosti \emph{persistent connection} u HTTP/1.1 \cite{HTTP-persistent-connection}.
+  \item Využít vlastnosti persistent connection u HTTP/1.1 \cite{HTTP-persistent-connection}.
     S využitím této vlastnosti by server mohl STM deklarovat jako offline v momentě, kdy by uzavřel
     TCP spojení.
   \item S ohledem na jednoduchost klienta (STM), udržet komunikaci co nejjednodušší tj.
     na HTTP/1.0 s co nejmenším počtem header options ze strany klienta.
     V takovém případě je na serveru nutnost zavést něco jako mechanismus časovače, který se obnoví po každé,
-    když přijde libovolná zpráva od daného STM, a v momentě, kdy vyprší, STM je offline.
+    když přijde libovolná zpráva od daného STM, a v momentě kdy vyprší, označí STM jako offline.
   \item STM a server budou udržovat separátní TCP spojení na úplně jiném portu, které
     by po dobu své životnosti značilo pouze to, že STM je připojeno k serveru.
     Tato možnost je příliš komplikovaná, zejména kvůli tomu, že každé STM by si se serverem muselo domluvit
@@ -57,11 +57,8 @@ aspektech:
 \begin{itemize}
     \item Zabudovaná podpora uživatelů - nám jen stačí přidat uživatelům odkazy na jejich
         zařízení.
-    \item Template system nám umožňuje v HTML stránkách používat speciální
-        tagy, díky kterým můžeme například do HTML stránky vložit hodnotu proměnné, nebo ... (TODO)
-        Template system nakonec vygeneruje validní HTML stránku.
     \item Zabudovaná podpora databázových systémů - většina backend frameworků poskytuje vrstvu abstrakce nad
-        databázovýmy(?) systémy. V praxi to znamená, že nikde v kódu nemusíme přímo vytvářet SQL dotazy,
+        databázovými systémy. V praxi to znamená, že nikde v kódu nemusíme přímo vytvářet SQL dotazy,
         stačí používat funkční API pro databáze v programovacím jazyce, ve kterém je daný framework napsaný.
 \end{itemize}
 
@@ -79,7 +76,7 @@ jazyk používá, a vzhledem k tomu, že autor má předchozí zkušenosti s Pyt
 \subsubsection{Frontend}
 % Bootstrap
 Vytváření vzhledu webu si usnadníme použitím knihovny Bootstrap \cite{Bootstrap}.
-Ta nám umožňuje snadno vytvořit moderně vypadající responsive webovou aplikaci. % TODO: co znamená responsive?
+Ta nám umožňuje snadno vytvořit moderně vypadající responsive webovou aplikaci. 
 
 % interaktivní device stránka
 Pro větší přehlednost požadujeme, aby se uživateli všechny jeho STM zobrazily na jednu stránku,

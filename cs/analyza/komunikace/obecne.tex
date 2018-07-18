@@ -1,18 +1,12 @@
 
 % Jakou funkcionalitu bude náš systém potřebovat?
-Náš komunikační systém bude potřebovat následující funkcionalitu:
+Po komunikačním systému vyžadujeme následující funkcionalitu:
 \begin{itemize}
     \item Periodicky posílat aktuálně naměřenou teplotu z STM na server.
     \item Synchronizovat čas mezi serverem a STM
     \item Synchronizovat nastavení intervalů na STM a na serveru.
           Pro tento bod potřebujeme mít funkční synchronizaci času.
 \end{itemize}
-
-% definice actual a config
-Dále budeme výše zmíněné měřitelné hodnoty, které STM měří a periodicky je posílá
-serveru, nazývat \emph{actual} a hodnoty, které se dají nastavit jak na serveru, tak na
-STM, \emph{config}.
-Při návrhu komunikace předpokládáme, že v budoucnu přibydou další \emph{config} a \emph{actual} položky.
 
 % STM a dynamická IP adresa
 Předpokládáme, že webový server běží na statické, veřejné IP adrese.
@@ -33,40 +27,36 @@ tato STM nějakým způsobem identifikovat.
 Otázka je kdy a kde tento identifikátor vzít.
 Máme dvě možnosti:
 \begin{itemize}
-  \item Identifikátor je zakódovaný do firmware STM.
+  \item Identifikátor je zakódovaný do firmwaru STM.
   \item Identifikátor se dynamicky vytvoří na serveru při prvním přístupu konkrétního STM.
 \end{itemize}
 Po serveru požadujeme, aby autentizoval STM tj. aby ověřil, že příchozí zprávy chodí skutečně
 od nějakého STM.
-Pokud bychom vytvářeli \emph{device ID} dynamicky na serveru, nemohli bychom ověřit, že
+Pokud bychom vytvářeli device ID dynamicky na serveru, nemohli bychom ověřit, že
 příchozí zpráva přišla od STM.
-V našem případě bude lepší \emph{device ID} zakódovat do firmware každého STM a rovnou ho uložit
+V našem případě bude lepší device ID zakódovat do firmwaru každého STM a rovnou ho uložit
 do databáze serveru.
-Na rozdíl od privátního klíče nehrozí při uložení \emph{device ID} přímo do firmware STM
+Na rozdíl od privátního klíče nehrozí při uložení device ID přímo do firmware STM
 žádné bezpečnostní riziko.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                              SYNCHRONIZACE                                               %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Synchronizace config položek
-Config data může uživatel nastavit jak na serveru, tak přímo na STM.
-Proto je potřeba zavést synchronizaci.
-
 \subsection{Synchronizace}
 
 % nastavovat se můžu naráz na serveru i na STM
-Uživateli dovolíme nastavovat config data naráz na serveru i na STM, platit bude ale pouze
+Uživateli dovolíme nastavovat intervaly naráz na serveru i na STM, platit bude ale pouze
 nastavení, které bylo uloženo později (vzhledem k reálnému času).
 Jiná, uživatelsky pravděpodobně příjemnější, možnost by byla nedovolit uživateli současně
-nastavovat stejná config data na serveru i na STM.
+nastavovat intervaly na serveru i na STM.
 Tato možnost je ovšem zbytečně složitá na implementaci.
 
 % Synchronizace času
 \subsubsection{Synchronizace času}
 
 % Synchronizace času - možnosti a proč je potřeba?
-Pro synchronizaci config dat je potřeba, aby server i STM měli nastavený společný čas.
+Pro synchronizaci intervalů je potřeba, aby server i STM měli nastavený společný čas.
 Vzhledem k tomu, že implementace NTP \cite{NTP} ale i jednoduššího a podobného
 protokolu SNTP \cite{SNTP} je na STM pracná, zvolíme jiný, jednodušší způsob synchronizace
 času mezi STM a serverem, který bude vycházet z TP \cite{TP}.
@@ -96,7 +86,7 @@ Předpokládejme, že uživatel toto dělat nebude.
 
 % Poznámky o time zone
 Z definice timestamp vyplývá, že STM nerozlišuje jednotlivé časové zóny.
-Pro jednoduchost budeme čas na STM interpretovat jako čas v zóně UTC+2.
+Pro jednoduchost budeme čas na STM interpretovat jako čas v zóně UTC.
 Pro správnou interpretaci času na STM v různých časových zónách bychom museli implementovat
 sofistikovanější časový protokol typu NTP.
 

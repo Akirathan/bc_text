@@ -15,15 +15,15 @@ intervalů ze serveru, který bude popsán později.
 Nejprve popíšeme třídy v diagramu a jejich funkcionalitu.
 \begin{itemize}
   \item \texttt{CommunicationDevice} který je objektovou reprezentací samotného STM a \texttt{Application}
-    do ní ukládá naměřenou teplotu pro odeslání na server a intervaly pro výměnu se serverem.
-    CommunicationDevice notifikuje Application o dvou důležitých událostech - \texttt{ConnectedEvent} a
-    \texttt{IntervalsChangedServerEvent} - tedy připojení k serveru a přijetí intervalů ze serveru.
+    do něj ukládá naměřenou teplotu pro odeslání na server a intervaly pro výměnu se serverem.
+    CommunicationDevice notifikuje Application o dvou důležitých událostech - ConnectedEvent a
+    IntervalsChangedServerEvent - tedy připojení k serveru a přijetí intervalů ze serveru.
   \item \texttt{Client} je HTTP klientem specifickým pro naše použití. Jednak do něj CommunicationDevice
     přeposílá data, které má od Application, a jednak Client notifikuje CommunicationDevice o
     důležitých událostech týkajících se komunikace se serverem jako jsou: \uv{intervaly byly odeslány},
     \uv{teplota byla odeslána}, \uv{intervaly byly přijaty}, apod.
   \item \texttt{TcpDriver} je wrapper pro LwIP knihovnu.
-  \item \texttt{ResponseBuffer} reprezentuje buffer pro HTTP odpovědi ze serveru.
+  \item \texttt{ResponseBuffer} reprezentuje buffer pro HTTP odpovědi ze serveru. \\
     TcpDriver přeposílá vše, co přijme, do ResponseBuffer.
     Ten si tato data ukládá dokud nedostane celou HTTP zprávu.
     Typicky se totiž stává, že server neodešle celou HTTP odpověď v jednom paketu a proto je potřeba
@@ -36,8 +36,7 @@ Nejprve popíšeme třídy v diagramu a jejich funkcionalitu.
 % popis vztahů
 Směrem dolů od Application až po LwIP probíhá odesílání dat na server resp. zařazení těchto dat
 do interních front LwIP - k samotnému odeslání dat typicky dojde později.
-Směrem nahoru od LwIP, přes TcpDriver, ResponseBuffer až po Application probíhá příjem dat
-ze serveru.
+Směrem nahoru od LwIP, přes TcpDriver, ResponseBuffer až po Application probíhá příjem dat ze serveru.
 Z pohledu kódu se dá směr dolů považovat za \uv{synchronní} a směr nahoru za \uv{asynchronní}, proto
 jsou také všechny metody, které jsou volané směrem nahoru, definovány jako callback metody.
 

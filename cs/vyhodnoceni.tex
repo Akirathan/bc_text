@@ -3,7 +3,7 @@
 
 \chapter{Vyhodnocení}
 % budeme testovat jenom STM
-V následující kapitole rozebereme způsoby, jakým se dá otestovat funkcionalita celého systému.
+V následující kapitole rozebereme způsoby, jakým se dá testovat funkcionalita celého systému.
 Testování funkcionality serveru není problém, takže se zaměříme pouze na testování STM.
 
 Firmware pro STM se poměrně těžko testuje.
@@ -11,7 +11,7 @@ Hlavně kvůli tomu, že na STM není žádný operační systém, který by spo
 samostatné procesy a potom nám vrátil vyhodnocení.
 
 
-Části firmware, které nejsou závislé na hardwaru, je vhodné testovat na PC.
+Části firmwaru, které nejsou závislé na hardwaru, je vhodné testovat na PC.
 Takovou částí je například celá síťová komunikace - tedy HTTP klient.
 
 % HW nezávislé komponenty
@@ -42,7 +42,7 @@ Device simulator je součástí přílohy této práce.
 % HW závislé komponenty
 \section{Hardwarově závislé komponenty}
 Zde se jedná zejména o \emph{Application drivers}, do kterých patří třídy, které s hardware pracují
-buď přímo, nebo přes \texttt{HAL}.
+buď přímo, nebo přes HAL.
 Pro tyto komponenty můžeme vytvořit něco jako unit testy, které přilinkujeme do zbytku firmwaru a explicitně
 je zavoláme z funkce \texttt{main}.
 Je to sice nepraktické, ale v některých případech se to může hodit.

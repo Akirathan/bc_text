@@ -11,7 +11,7 @@ Také musí být relativně spolehlivý.
 
 % Alokace paměti - nebudeme používat dynamickou alokaci.
 \paragraph{Alokace paměti}
-Vzhledem k tomu, že od firmware se očekává, že poběží bez vypnutí dlouhou dobu, je potřeba aby
+Vzhledem k tomu, že od firmwaru se očekává, že poběží bez vypnutí dlouhou dobu, je potřeba aby
 dodržoval některé invarianty.
 Tyto invarianty by měly zaručovat, že firmware nepřestane fungovat svojí vlastní vinou.
 Samozřejmě vždy se může stát, že přestane fungovat některá z hardwarových komponent.
@@ -27,9 +27,9 @@ která v STM mohou být uložena, dokážeme předem určit jejich maximální v
 \paragraph{Real-time vlastnosti}
 Real-time vlastností firmwaru máme na mysli tu skutečnost, že jsme teoreticky schopni spočítat nebo
 naměřit délku maximální resp. minimální trvání každého tasku.
-Mohli bychom například deklarovat, že \emph{GUI task} nesmí trvat déle než
+Mohli bychom například deklarovat, že GUI task nesmí trvat déle než
 100 ms.
-Pomocí watchdog \cite{ReferenceManual} periferie bychom tuto maximální dobu trvání tasku snadno zajistili - v
+Pomocí watchdog periferie \cite{ReferenceManual} bychom tuto maximální dobu trvání tasku snadno zajistili - v
 případě, kdyby task trval déle, watchdog by celý systém resetoval.
 
 Pro náš firmware jsou ale tyto vlastnosti nedůležité a tak nebudeme měřit dobu trvání jednotlivých
@@ -49,7 +49,7 @@ v inicializační fázi programu resp. po určitý časový úsek.
 Po uplynutí inicializační fáze programu bychom alokování vypnuli a jakýkoli pokus o alokaci další
 paměti by znamenal chybu.
 Dodejme ještě, že množství alokované paměti po dobu inicializační fáze se dá spočítat při překladu
-a tudíž se jedná de-facto pouze o statickou alokaci paměti, přestože v programu během inicializační
+a tudíž se jedná de facto pouze o statickou alokaci paměti, přestože v programu během inicializační
 fáze používáme typy, které můžou volat operátor \texttt{new}.
 Kvůli přílišné složitosti tohoto řešení se ale raději spokojíme s tím, že STL nebudeme používat vůbec.
 Navíc by nám toto omezené používání \uv{dynamické alokace} paměti pouze během inicializační fáze
@@ -66,7 +66,7 @@ jsou definované přímo v typech, které je používají) a indexy do těchto p
 jestli pole nepřeteklo.
 V drtivé většině těchto případů by bylo daleko snazší použít například \texttt{std::vector}.
 
-Přestože nepoužíváme STL, přidá nám C++ další abstrakci, která nám usnadní~programování.
+Přestože nepoužíváme STL, přidá nám C++ další abstrakci, která nám u\-snad\-ní programování.
 
 % Struktura
 \subsubsection{Struktura}
@@ -86,10 +86,10 @@ Jednak přímo pracuje se skupinou tříd \texttt{GUI}, pomocí které zobrazuje
 případně mu umožňuje nastavení některých dat, ale také pracuje přímo se skupinou \texttt{Communication},
 která obstarává veškerou komunikaci se serverem.
 Skupina \texttt{Application Drivers} obsahuje aplikačně specifické wrappery hardwarových ovladačů nad
-\texttt{STM32Cube}, v jednom případě i třídu \texttt{OneWire}, která přistupuje k hardware přímo
+\texttt{STM32Cube}, v jednom případě i třídu \texttt{OneWire}, která přistupuje k hardwaru přímo
 a ne přes \texttt{STM32Cube}.
 
-Obrázek \ref{stm-fw-struktura} slouží pouze jako nástin struktury firmware a nikoli jako detailní popis
+Obrázek \ref{stm-fw-struktura} slouží pouze jako nástin struktury firmwaru a nikoli jako detailní popis
 fungování jednotlivých typů.
 Bližší informace o struktuře skupiny \texttt{Communication} je uvedena v kapitole \uv{Implementace komunikace},
 struktura skupiny \texttt{GUI} je popsána v kapitole \uv{GUI}.

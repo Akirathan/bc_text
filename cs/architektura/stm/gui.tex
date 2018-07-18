@@ -50,13 +50,13 @@ může vrátit \texttt{Message::EXIT}, čímž říká že má být aktuální f
 \subsubsection{WindowSystem}
 \texttt{WindowSystem} je v podstatě kontejner pro všechna okna v rámci jednoho frame a ještě se stará
 o výše zmíněnou logiku.
-Frame Při inicializaci pouze přidává kontrolní a statická okna do \texttt{WindowSystem}.
+Frame při inicializaci pouze přidává kontrolní a statická okna do \texttt{WindowSystem}.
 Za běhu potom \texttt{WindowSystem} podle vstupu buď přepíná mezi kontrolními okny, nebo přímo vypne
 aktuální frame.
 
 % zpracování vstupu je v interrupt handleru kdežto vykreslování v mainloop
 Zde je důležité si uvědomit, že zpracování vstupu probíhá v \emph{user input task}, což je interrupt
-handler jednoho z timeru, který tento interrupt spouští jednou za 100 ms.
+handler jednoho z časovače, který tento interrupt generuje jednou za 100 ms.
 Z pohledu kódu je tedy zpracování vstupu a všechno s tím spojené asynchronní.
 Protože zpracování vstupu běží v jiném kontextu než vykreslování, je potřeba rozlišovat metody podle
 toho ve kterém kontextu jsou volány.
@@ -65,7 +65,7 @@ ně strukturu, kterou rozebereme v následujícím odstavci.
 
 %%%%% Callback metody %%%%%%
 \paragraph{Callback metody}
-Občas v rámci jednoho frame chceme reagovat na stisknutí některého z čudlíků.
+Občas v rámci jednoho frame chceme reagovat na stisknutí některého z tlačítek.
 Například při stisku \uv{Exit} v \texttt{SetIntervalFrame} bychom chtěli ukončit celý frame a uložit
 uživatelem zadané hodnoty.
 Zavedeme několik rozhraní se dvěmi čistě virtuálními metodami: \texttt{callback} a \texttt{register}.
@@ -91,9 +91,9 @@ Diagram \ref{fig:stm-callback-metody} ilustruje situaci, kdy je uživatel v \tex
 tlačítko \uv{exit} a dostane se zpět do \texttt{MainFrame}.
 Proces na diagramu je následující:
 \begin{enumerate}
-  \item Vygenerování interruptu timerem.
+  \item Vygenerování interruptu časovačem.
   \item Zavolání metody \texttt{IO::task}, ve které dojde k vytvoření callback objektu s parametrem.
-  \item Zavolání metody \texttt{WindowSystem::inputCallback}, která tento callback předá aktuálně
+  \item Zavolání metody \texttt{WindowSystem::inputCallback}, která tento callback pře\-dá aktuálně
     nakliknutému oknu (v tomto případě je to \texttt{exitButton}), které vrátí \texttt{Message::EXIT}
     ze svého \texttt{eventHandler}.
   \item Zavolání metody \texttt{OverviewIntervalFrame::exitMessageCallback}
@@ -115,6 +115,6 @@ třídy \texttt{Window}.
 % okna se nepřekreslují, když to není nutné.
 Pokud oknu změníme hodnotu a chceme, aby bylo v rámci \emph{GUI task} překresleno, musíme mu explicitně
 nastavit \texttt{redrawFlag}.
-Díky redrawFlag máme zajištěno i to, že nemusíme zbytečně překreslovat okna, která to nepotřebují.
+Díky \texttt{redrawFlag} máme zajištěno i to, že nemusíme zbytečně překreslovat okna, která to nepotřebují.
 Přeci jen je vykreslování na displej časově poměrně náročné.
 

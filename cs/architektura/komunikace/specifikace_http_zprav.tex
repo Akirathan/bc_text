@@ -1,4 +1,4 @@
-\subsection{Specifikace HTTP zpráv}
+\subsection{Specifikace HTTP zpráv} \label{kap:specifikace-http-zprav}
 
 Tato sekce popisuje obsah jednotlivých HTTP zpráv mezi STM a serverem.
 Pro jednoduchost zde nejsou téměř vůbec uvedeny obsahy hlaviček.
@@ -38,7 +38,7 @@ Content-Type: text/plain
 <temp_float>
 \end{packetstm}
 
-Kde \texttt{temp\_timestamp} je timestamp značící kdy byla teplota naměřena a
+Kde \texttt{temp\_timestamp} je timestamp značící kdy byla teplota naměřena a \\
 \texttt{temp\_float} je teplota v desetinné přesnosti.
 
 % Výměna intervalů
@@ -86,4 +86,4 @@ Formát intervalů je stejný jako formát, ve kterém si samo STM intervaly ukl
 má následující podobu:
 \texttt{<from>} \texttt{<to>} \texttt{<temp>}, kde \texttt{from} a \texttt{to} jsou
 časy v minutách v rámci dne a \texttt{temp} je teplota.
-Každá položka reprezentuje 4 bajtové neznaménkové číslo.
+Každá položka je reprezentována 4 bajtovým číslem bez znaménka.

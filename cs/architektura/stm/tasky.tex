@@ -23,10 +23,9 @@ Naše aplikace potřebuje provádět 3 tasky:
 
   \item \textbf{Ethernet task} má na startosti zpracování paketů z ethernetové
     periferie. Je potřeba periodicky volat dvě funkce z LwIP knihovny -
-    \texttt{ethernetif\_input},~která se stará o nízko-úrovňový příjem nebo odesílání paketů resp.
-    bajttů z ethernetové periferi, a \texttt{sys\_check\_timeouts}, která kontroluje platnost různých
+    \texttt{ethernetif\_input}, která se stará o nízko-úrovňový příjem nebo odesílání paketů resp.
+    bajtů z ethernetové periferi, a \texttt{sys\_check\_timeouts}, která kontroluje platnost různých
     dočasných hodnot, jako je třeba ARP tabulka, a v případě potřeby je obnoví.
-    Proto je vhodné tento task provádět z mainloop.
 
   \item \textbf{RTC task} má na starosti zpracovávání sekundového interruptu a jednou za
     minutu změřit aktuální teplotu.

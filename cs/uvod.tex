@@ -3,11 +3,11 @@
 
 Termín \emph{embedded} zařízení označuje zařízení, které má typicky relativně omezené výpočetní schopnosti,
 zejména ve smyslu výkonnosti procesoru a velikosti paměti.
-Funkcionalita, kterou mohou embedded zařízení mít sahá od té nejjednodušší jako je třeba mikrokontrolér
+Funkcionalita, kterou mohou embedded zařízení mít, sahá od té nejjednodušší jako je třeba mikrokontrolér
 v pračce, až po komplexní, jako jsou třeba chytré hodinky.
-S tím přímo souvisí i architektura jejich software.
+S tím přímo souvisí i architektura jejich softwaru.
 Na těch nejjednodušších, do nekonečna vykonávajících jedinou úlohu, běží v cyklu jediný software
-nazývaný v takovém případě \emph{firmware}.
+nazývaný v takovém případě firmware.
 Na komplexnějších, typicky hardwarově výkonnějších zařízeních už může běžet nějaký vyšší operační systém
 typu Linux nebo Windows, a tedy od klasických desktopových počítačů se příliš neliší.
 
@@ -19,7 +19,7 @@ Tato práce se zabývá vývojem firmware pro embedded zařízení spadající d
 
 
 \section{Cíle práce}
-Cílem práce je vytvořit firmware pro embedded zařízení chovající se jako termostat a umožňující
+Cílem práce je vytvořit firmware pro embedded zařízení chovající se jako termostat tj. umožňující
 uživateli nastavit teplotu po libovolné časové intervaly přes den a zobrazující aktuálně naměřenou
 teplotu, a software pro webový server umožňující správu tohoto zařízení na dálku.
 Kromě firmware pro embedded zařízení a software pro webový server specifikuje tato práce také
@@ -35,9 +35,8 @@ Dále následují dvě hlavní kapitoly analýza a architektura, kde každá z n
 \uv{Webový server} a \uv{Komunikace STM se serverem}.
 Podsekce \uv{STM} rozebírá embedded část práce, \uv{Webový server} se zabývá návrhem a implementací webového serveru
 a \uv{Komunikace STM se serverem} se zabývá propojením STM a webového serveru.
-Kapitola analýza nabízí několik možností řešení každé podsekce a vybírá z nich ty nejvhodnější,
-architektura se zabývá konkrétní implementací pro každou podsekci.
+Kapitola analýza nabízí několik možností řešení každé podsekce a vybírá z nich ty nejvhodnější.
+Kapitola architektura se zabývá konkrétní implementací pro každou podsekci.
 
 Jako další je kapitola \uv{Práce se systémem}, která popisuje použití v reálném prostředí, po ní kapitola
-\uv{Vyhodnocení}, ve které je popsáno jakým způsobem se testuje funkcionalita celého systému, a nakonec
-je \uv{Závěr}.
+\uv{Vyhodnocení}, ve které je popsáno jakým způsobem se testuje funkcionalita celého systému.

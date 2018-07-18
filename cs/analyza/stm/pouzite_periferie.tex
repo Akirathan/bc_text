@@ -7,7 +7,7 @@ Nemá smysl zde opisovat technické detaily z referenčního manuálu \cite{Refe
 % EEPROM
 \subsubsection{EEPROM}
 EEPROM je 64 KB persistentní uložiště dat na I2C sběrnici.
-Uložit do něj můžeme de-facto cokoli a kdykoli v libovolném formátu.
+Uložit do něj můžeme v podstatě cokoli a kdykoli v libovolném formátu.
 V našem případě do této paměti budeme ukládat nastavení teplotních intervalů a privátní klíč
 určený k šifrování komunikace se serverem.
 
@@ -35,35 +35,25 @@ RTC má 32-bitový counter registr, do kterého můžeme zapsat libovolný čas 
 něj číst aktuální čas.
 
 % Second interrupt
-\paragraph{hardwarová přerušení}
+\paragraph{Hardwarová přerušení}
 RTC dále lze nastavit tak, aby při každém zvýšení čítače generovalo hardwarové
 přerušení (second interrupt).
 V naší aplikaci je sekundové přerušení žádoucí.
 
-% Alarm, probuzení ze stand-by režimu
-Další důležitá vlastnost RTC je, že je schopné probudit desku ze stand-by režimu.
-RTC je tedy schopné provozu i pokud je napájené pouze z baterie, respektive
-zvyšuje pouze čítač a porovnává s přednastavenou hodnotou alarmu, a pokud je
-čítač vyšší nebo stejný, probudí desku.
-Což znamená, že bychom mohli desku pravidelně přepínat do režimu stand-by, ve
-kterém je spotřeba energie minimální.
-Náš systém ale očekává stálé napájení, zejména kvůli ethernetové periferii,
-tuto vlastnost RTC tedy nevyužíváme.
-
 % jak budeme RTC používat
 \paragraph{Použití}
-V naší aplikaci používáme pro synchronizaci času se serverem \emph{Unix timestamp} \cite{Unix-timestamp}.
+V naší aplikaci používáme pro synchronizaci času se serverem Unix timestamp \cite{Unix-timestamp}.
 Vzhledem k tomu, že do RTC counter registru můžeme kdykoli zapsat, můžeme do něj zapsat tento timestamp, který
 získáme ze serveru a RTC bude counter registr každou sekundu zvyšovat.
-Tímto jednoduchým způsobem umožníme synchronizaci času na serveru a na STM.
+Tímto jednoduchým způsobem umožníme synchronizaci času serveru a STM.
 
 % GPIO
 \subsubsection{GPIO}
-Na STM desce je celkem 100 GPIO pinů.
+Na STM je celkem 100 GPIO pinů.
 Každý z těchto pinů se dá nastavit jako vstupní nebo výstupní, navíc má k sobě interně připojený
 rezistor.
 Na teplotní senzor využijeme 3 GPIO piny - napájení, uzemnění a datový pin.
-Komunikace s teplotním senzorem je specifikována \emph{One wire} protokolem
+Komunikace s teplotním senzorem je specifikována 1-Wire protokolem
 \footnote{One wire protokol je popsán v \cite{DS18B20}} a vyžaduje, aby na datovém pinu byl připojený pull-up rezistor.
 Tento datový pin stačí přepínat z režimu \uv{input pull-up} tj. vstupní režim s připojeným pull-up
 rezistorem, do režimu \uv{output push-pull} tj. výstupní režim bez připojeného rezistoru.

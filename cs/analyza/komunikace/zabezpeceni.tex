@@ -4,7 +4,7 @@
 % Co požadujeme
 \paragraph{Požadavky}
 \begin{itemize}
-    \item Autentikace zpráv. Potřebujeme zajistit, aby server přijímal pouze zprávy od STM a nikoho jiného.
+    \item Autentikace zpráv. Potřebujeme zajistit, aby server přijímal pouze zprávy od STM.
     \item Šifrování zpráv. Z hlediska zabezpečení by bylo nejlepší kdybychom šifrovali jak těla HTTP
       zpráv, tak jejich hlavičky.
       Pro jednoduchost implementace budeme šifrovat pouze těla zpráv.
@@ -25,10 +25,10 @@ Závěr je tedy takový, že HTTPS používat nebudeme.
 
 % Symetrické VS asymetrické šifrování
 \paragraph{Symetrické nebo asymetrické šifrování}
-Kdybychom chtěli použít pouze \emph{asymetrické} šifrování, server by měl privátní klíč a každé STM
+Kdybychom chtěli použít pouze asymetrické šifrování, server by měl privátní klíč a každé STM
 by šifrovalo komunikaci veřejným klíčem.
 Problém tohoto řešení je nedostatečná autentizace - veřejný klíč může získat každý, nejen STM.
-Pro naše účely je tedy lepší použít \emph{symetrické} šifrování.
+Pro naše účely je tedy lepší použít symetrické šifrování.
 Dodejme ještě že střídání asymetrického a symetrického šifrování, podobně jako je tomu u výše zmíněného
 HTTPS, jsme zavrhli zejména kvůli složitosti.
 % jaké šifrování? --> DES
@@ -42,17 +42,17 @@ Pro naše využití to je dostačující zabezpečení.
 Pro symetrické šifrování potřebujeme, aby existovalo tolik párů klíčů, jako je STM zařízení.
 Jeden z páru má server a druhý STM.
 Následující text se zabývá problémem kde a kdy vzít tyto klíče.
-\\ \\ 
+\\
 Máme dvě možnosti:
 \begin{itemize}
-    \item STM má zabudovaný klíč ve svém firmware a server má databází všech těchto klíčů.
+    \item STM má zabudovaný klíč ve svém firmwaru a server má databázi všech těchto klíčů.
     \item Server generuje klíč na žádost uživatele.
 \end{itemize}
 
 % Proč je hardcoded klíč špatný nápad?
-Mít klíč zabudovaný do firmware STM není příliš vhodné pro případy, kdy by si uživatel pořídil STM
+Mít klíč zabudovaný do firmwaru STM není příliš vhodné pro případy, kdy by si uživatel pořídil STM
 \uv{z druhé ruky}.
-Zejména je zde nižší zabezpečení nového vlastníka STM, bývalý vlastník by totiž teoreticky
+Zejména je zde nižší zabezpečení nového vlastníka STM - bývalý vlastník by totiž teoreticky
 mohl z firmware dostat podobu klíče a podvrhovat komunikaci novému vlastníkovi.
 
 Proto zvolíme řešení s generováním nových klíčů na žádost uživatele.
@@ -66,7 +66,7 @@ Server si ke každému STM potřebuje přiřadit klíč, což může udělat nej
 mu od daného STM přijde \emph{connect} zpráva (což je první zpráva, kterou STM pošle - viz
 \ref{kap:specifikace-http-zprav}).
 I kdyby dopředu věděl, který klíč patří kterému STM, nemůže vědět od kterého STM mu přišla
-\emph{connect} zpráva protože dopředu nezná IP adresy jednotlivých STM.
+\emph{connect} zpráva, protože dopředu nezná IP adresy jednotlivých STM.
 
 % Postup generování klíčů
 \subparagraph{Postup generování klíčů}
@@ -75,15 +75,15 @@ I kdyby dopředu věděl, který klíč patří kterému STM, nemůže vědět o
     \item Uživatel zadá klíč do STM.
     \item STM pošle šifrovanou \emph{connect} zprávu serveru.
     \item Server se pokouší dešifrovat zprávu všemi dosud nespárovanými klíči, dokud nedostane korektní
-        \emph{connect} zprávu tj. korektní HTTP hlavičku s tělem obsahujícím existující \emph{device ID}.
-    \item Server má sprárované \emph{device ID} s klíčem a IP adresou.
+        \emph{connect} zprávu tj. korektní HTTP hlavičku s tělem obsahujícím existující device ID.
+    \item Server má sprárované device ID s klíčem a IP adresou.
 \end{enumerate}
 
 Výše zmíněný mechanismus generování klíčů a obecně vzato symetrické šifrování v tomto pojetí sice
 přidává bezpečnost do komunikace, ovšem na úkor rychlosti připojení STM k serveru.
-Server totiž dostane po každé \emph{connect} zprávu z \uv{neznámé} IP adresy a musí se tudíž
+Server totiž po každé dostane \emph{connect} zprávu z \uv{neznámé} IP adresy a musí se tudíž
 pokusit tuto zprávu dešifrovat postupně jednak všemi dosud nespárovanými klíči, ale také klíči
 ze všech offline STM.
-Proces připojení STM k serveru může být tedy poměrně zdlouhavý, obzvlášť v případě kdy je mnoho
+Proces připojení STM k serveru může být poměrně zdlouhavé, zvlášť v případě kdy je mnoho
 STM offline.
 To ale v našem případě nevadí.

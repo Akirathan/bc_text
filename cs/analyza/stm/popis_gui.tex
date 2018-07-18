@@ -1,13 +1,11 @@
 
 \subsection{Popis GUI} \label{popis-gui}
 V této kapitole specifikujeme výstup STM tj. popíšeme co všechno a za jakých okolností
-bude zobrazeno na displeji v daný moment.
+bude STM zobrazovat na displej.
 
 % Stavy vzhledem ke GUI.
 Nejprve specifikujeme v jakých stavech se STM může nacházet.
-Toto jsou pouze stavy, které nás zajímavý v kontextu GUI - tj. v kontextu toho co všechno chceme
-uživateli zobrazit.
-Rozhodně se nejedná o souhrn všech možný stavů.
+Toto jsou pouze stavy, které nás zajímají v kontextu GUI, rozhodně se nejedná o souhrn všech možný stavů.
 \subsubsection{Stavy STM}
 \begin{itemize}
   \item Ethernetová periferie je korektně inicializována a kabel je připojen. Zkráceně budeme
@@ -28,8 +26,8 @@ Rozhodně se nejedná o souhrn všech možný stavů.
 % Invarianty - co chceme aby v rámci GUI platilo.
 \subsubsection{Invarianty}
 \begin{itemize}
-  \item Odpojení resp. zapojení ethernetového kabelu když je STM zapnuté by nemělo způsobit žádnou chybu, což
-    znamená, že stavy \texttt{ETH-up} a \texttt{ETH-down} se mohou libovolně střídat.
+  \item Odpojení resp. zapojení ethernetového kabelu když je STM zapnuté by nemělo způsobit žádnou chybu.
+    To znamená, že stavy \texttt{ETH-up} a \texttt{ETH-down} se mohou libovolně střídat.
   \item Pokud se STM dostane do stavu \texttt{ETH-up}, dá uživateli možnost připojit se k serveru.
   \item Pokud je STM ve stavu \texttt{CONNECTED}, nemůže se od serveru odpojit.
     Jediná možnost jak STM odpojit od serveru je buď ho resetovat nebo odpojit ethernetový kabel.
@@ -44,7 +42,7 @@ Rozhodně se nejedná o souhrn všech možný stavů.
 V rámci celého GUI nám stačí tyto grafické prvky:
 \begin{itemize}
   \item Tlačítka, pomocí kterých uživatel buď potvrdí zadaná data, nebo je zahodí.
-    Kromě toho tlačítka ještě umožňují přepínání mezi jednotlivými obrazovkami.
+    Kromě toho umožňují ještě tlačítka přepínání mezi jednotlivými obrazovkami.
   \item Okna s nastavitelnou hodnotou kde hodnota může být například čas v minutách, nebo teplota.
     Uživatel může hodnotu nastavit pomocí joysticku.
   \item Okna, která slouží pouze pro zobrazování nějaké hodnoty - například aktuálního času, nebo
@@ -55,8 +53,8 @@ V rámci celého GUI nám stačí tyto grafické prvky:
 Nejprve uvedeme nákresy jednotlivých obrazovek a popíšeme co znamenají.
 Potom uvedeme tzv. frame diagram tj. stavový diagram obrazovek, kde popíšeme jak se mezi sebou
 jednotlivé obrazovky přepínají.
-Zeleně zabarvený text v obrázcích představuje buď nakliknutelný čudlík nebo měnitelný prvek - například čas.
-Jak jsme již zmiňovali STM se ovládá pomocí joysticku pod displejem.
+Zeleně zabarvený text v obrázcích představuje buď nakliknutelné tlačítko nebo měnitelný prvek - například čas.
+Jak jsme již zmiňovali, STM se ovládá pomocí joysticku pod displejem.
 Pohybem joysticku do stran přepínáme mezi jednotlivými nakliknutelnými prvky.
 Pohybem joysticku nahoru a dolu měníme hodnoty právě nakliknutých prvků, pokud to jde.
 Nakliknutý prvek na displeji STM poznáme podle červeného zabarvení.
@@ -92,7 +90,7 @@ intervalů se ukončí a všechny nastavené intervaly jsou uloženy do EEPROM.
 
 Zobrazena je v těchto případech:
 \begin{itemize}
-  \item když EEPROM neobsahuje žádné nastavení intervalů což nastává v případě kdy uživatel
+  \item Když EEPROM neobsahuje žádné nastavení intervalů. To nastává v případě kdy uživatel
     ještě žádné intervaly nenastavoval - tedy po prvním spuštění STM.
   \item Když uživatel zmáčkne v obrazovce \texttt{MainFrame} tlačítko \uv{reset intervals}.
 \end{itemize}
@@ -166,7 +164,7 @@ a koncovým uzlem \texttt{MainFrame}.
 zobrazí v případě kdy je STM offline nebo je spuštěno poprvé.
 Po zadání konfigurace, je-li to nutné, se uživatel nakonec dostane do \texttt{MainFrame}, ze kterého
 už může prohlížet jednotlivé intervaly v \texttt{OverviewIntervalFrame}, případně všechny intervaly
-přenastavit v \texttt{SetIntervalFrame}.
+přenastavit v \texttt{SetInterval\allowbreak Frame}.
 Dále se z \texttt{MainFrame} může uživatel ještě dostat do \texttt{KeyFrame}, pokud se chce připojit
 k serveru a klíč ještě není uložen v EEPROM.
 
